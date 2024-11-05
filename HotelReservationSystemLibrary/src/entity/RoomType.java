@@ -57,7 +57,8 @@ public class RoomType implements Serializable {
     }
     
     // overloaded constructor
-    public RoomType(String name, String description, int size, String bed, int capacity, String amenities, Boolean isDisabled, Boolean roomTypeStatus, List<Room> rooms, List<RoomRate> roomRates) {
+
+    public RoomType(String name, String description, int size, String bed, int capacity, String amenities, Boolean isDisabled, Boolean roomTypeStatus, List<Room> rooms, List<RoomRate> roomRates, List<Reservation> reservations) {
         this.name = name;
         this.description = description;
         this.size = size;
@@ -68,8 +69,9 @@ public class RoomType implements Serializable {
         this.roomTypeStatus = roomTypeStatus;
         this.rooms = rooms;
         this.roomRates = roomRates;
-    }   
-    
+        this.reservations = reservations;
+    }
+
     public Long getRoomTypeId() {
         return roomTypeId;
     }
@@ -213,6 +215,48 @@ public class RoomType implements Serializable {
     @Override
     public String toString() {
         return "entity.RoomType[ id=" + roomTypeId + " ]";
+    }
+
+    /**
+     * @return the reservations
+     */
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    /**
+     * @param reservations the reservations to set
+     */
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+
+    /**
+     * @return the rooms
+     */
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
+    /**
+     * @param rooms the rooms to set
+     */
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
+    }
+
+    /**
+     * @return the roomRates
+     */
+    public List<RoomRate> getRoomRates() {
+        return roomRates;
+    }
+
+    /**
+     * @param roomRates the roomRates to set
+     */
+    public void setRoomRates(List<RoomRate> roomRates) {
+        this.roomRates = roomRates;
     }
     
 }
