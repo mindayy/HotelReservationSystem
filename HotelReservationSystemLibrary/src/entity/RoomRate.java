@@ -7,6 +7,7 @@ package entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -16,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -48,21 +50,20 @@ public class RoomRate implements Serializable {
     @JoinColumn(nullable = false)
     private RoomType roomType;
     
-    @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
-    private Reservation reservation;
+    @ManyToMany(mappedBy = "roomRates")
+    private List<Reservation> reservations;
     
     
     public RoomRate() {
     }
 
-    public RoomRate(Enum rateType, BigDecimal ratePerNight, Date validFrom, Date validTo, RoomType roomType, Reservation reservation) {
+    public RoomRate(Enum rateType, BigDecimal ratePerNight, Date validFrom, Date validTo, RoomType roomType, List<Reservation> reservations) {
         this.rateType = rateType;
         this.ratePerNight = ratePerNight;
         this.validFrom = validFrom;
         this.validTo = validTo;
         this.roomType = roomType;
-        this.reservation = reservation;
+        this.reservations = reservations;
     }
     
     public Long getRoomRateId() {
@@ -171,15 +172,15 @@ public class RoomRate implements Serializable {
     /**
      * @return the reservation
      */
-    public Reservation getReservation() {
-        return reservation;
+    public List<Reservation> getReservations() {
+        return reservations;
     }
 
     /**
      * @param reservation the reservation to set
      */
-    public void setReservation(Reservation reservation) {
-        this.reservation = reservation;
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
     
 }

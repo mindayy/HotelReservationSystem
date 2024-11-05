@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
@@ -26,6 +27,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 public class Reservation implements Serializable {
+
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -55,6 +57,9 @@ public class Reservation implements Serializable {
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private RoomType roomType;
+    
+    @ManyToMany(mappedBy = "reservations")
+    private List<RoomRate> roomRates;
 
     
     public Reservation() {
@@ -62,7 +67,7 @@ public class Reservation implements Serializable {
     
     // overloaded constructor
 
-    public Reservation(Date checkInDate, Date checkOutDate, BigDecimal reservationAmt, Guest guest, Partner partner, List<ReserveRoom> reservationRooms, RoomType roomType) {
+    public Reservation(Date checkInDate, Date checkOutDate, BigDecimal reservationAmt, Guest guest, Partner partner, List<ReserveRoom> reserveRooms, RoomType roomType, List<RoomRate> roomRates) {
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.reservationAmt = reservationAmt;
@@ -70,9 +75,9 @@ public class Reservation implements Serializable {
         this.partner = partner;
         this.reserveRooms = reserveRooms;
         this.roomType = roomType;
+        this.roomRates = roomRates;
     }
-    
-    
+
     public Long getReservationId() {
         return reservationId;
     }
@@ -123,6 +128,21 @@ public class Reservation implements Serializable {
     public void setReservationAmt(BigDecimal reservationAmt) {
         this.reservationAmt = reservationAmt;
     }
+    
+    /**
+     * @return the roomRates
+     */
+    public List<RoomRate> getRoomRates() {
+        return roomRates;
+    }
+
+    /**
+     * @param roomRates the roomRates to set
+     */
+    public void setRoomRates(List<RoomRate> roomRates) {
+        this.roomRates = roomRates;
+    }
+
 
     @Override
     public int hashCode() {
@@ -147,6 +167,62 @@ public class Reservation implements Serializable {
     @Override
     public String toString() {
         return "entity.Reservation[ id=" + reservationId + " ]";
+    }
+
+    /**
+     * @return the guest
+     */
+    public Guest getGuest() {
+        return guest;
+    }
+
+    /**
+     * @param guest the guest to set
+     */
+    public void setGuest(Guest guest) {
+        this.guest = guest;
+    }
+
+    /**
+     * @return the partner
+     */
+    public Partner getPartner() {
+        return partner;
+    }
+
+    /**
+     * @param partner the partner to set
+     */
+    public void setPartner(Partner partner) {
+        this.partner = partner;
+    }
+
+    /**
+     * @return the reserveRooms
+     */
+    public List<ReserveRoom> getReserveRooms() {
+        return reserveRooms;
+    }
+
+    /**
+     * @param reserveRooms the reserveRooms to set
+     */
+    public void setReserveRooms(List<ReserveRoom> reserveRooms) {
+        this.reserveRooms = reserveRooms;
+    }
+
+    /**
+     * @return the roomType
+     */
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    /**
+     * @param roomType the roomType to set
+     */
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
     }
     
 }
