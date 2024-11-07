@@ -4,17 +4,26 @@
  */
 package horsreservationclient;
 
+import ejb.session.stateless.RoomTypeSessionBeanRemote;
+import javax.ejb.EJB;
+
 /**
  *
  * @author min
  */
 public class Main {
 
+    @EJB
+    private static RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
+    
+    
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
+    public static void main(String[] args)
+    {
+        MainApp mainApp = new MainApp(roomTypeSessionBeanRemote);
+        mainApp.runApp();
     }
     
 }

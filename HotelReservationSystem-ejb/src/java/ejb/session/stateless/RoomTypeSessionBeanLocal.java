@@ -4,7 +4,9 @@
  */
 package ejb.session.stateless;
 
+import entity.RoomType;
 import javax.ejb.Local;
+import util.exception.RoomTypeNotFoundException;
 
 /**
  *
@@ -12,5 +14,11 @@ import javax.ejb.Local;
  */
 @Local
 public interface RoomTypeSessionBeanLocal {
+
+    public Long createNewRoomType(RoomType roomType);
+
+    public void updateRoomType(Long roomTypeId, String newName, String newDescription, 
+            int newSize, String newBed, int newCapacity, String newAmenities, 
+            Boolean isDisabled, Boolean roomTypeStatus) throws RoomTypeNotFoundException;
     
 }
