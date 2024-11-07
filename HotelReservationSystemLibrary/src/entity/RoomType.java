@@ -5,6 +5,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -54,11 +55,14 @@ public class RoomType implements Serializable {
     
     // empty constructor
     public RoomType() {
+        roomRates = new ArrayList<>();
+        reservations =  new ArrayList<>();
+        rooms =  new ArrayList<>();
     }
     
     // overloaded constructor
 
-    public RoomType(String name, String description, int size, String bed, int capacity, String amenities, Boolean isDisabled, Boolean roomTypeStatus, List<Room> rooms, List<RoomRate> roomRates, List<Reservation> reservations) {
+    public RoomType(String name, String description, int size, String bed, int capacity, String amenities, Boolean isDisabled, Boolean roomTypeStatus) {
         this.name = name;
         this.description = description;
         this.size = size;
@@ -67,10 +71,9 @@ public class RoomType implements Serializable {
         this.amenities = amenities;
         this.isDisabled = isDisabled;
         this.roomTypeStatus = roomTypeStatus;
-        this.rooms = rooms;
-        this.roomRates = roomRates;
-        this.reservations = reservations;
     }
+
+    
 
     public Long getRoomTypeId() {
         return roomTypeId;

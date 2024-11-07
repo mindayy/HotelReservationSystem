@@ -6,6 +6,7 @@ package entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
@@ -63,20 +64,18 @@ public class Reservation implements Serializable {
 
     
     public Reservation() {
+        reserveRooms = new ArrayList<>();
+        roomRates = new ArrayList<>();
     }
     
     // overloaded constructor
 
-    public Reservation(Date checkInDate, Date checkOutDate, BigDecimal reservationAmt, Guest guest, Partner partner, List<ReserveRoom> reserveRooms, RoomType roomType, List<RoomRate> roomRates) {
+    public Reservation(Date checkInDate, Date checkOutDate, BigDecimal reservationAmt) {
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.reservationAmt = reservationAmt;
-        this.guest = guest;
-        this.partner = partner;
-        this.reserveRooms = reserveRooms;
-        this.roomType = roomType;
-        this.roomRates = roomRates;
     }
+
 
     public Long getReservationId() {
         return reservationId;

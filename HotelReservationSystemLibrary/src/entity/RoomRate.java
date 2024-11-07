@@ -6,6 +6,7 @@ package entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
@@ -55,16 +56,17 @@ public class RoomRate implements Serializable {
     
     
     public RoomRate() {
+        reservations = new ArrayList<>();
     }
 
-    public RoomRate(Enum rateType, BigDecimal ratePerNight, Date validFrom, Date validTo, RoomType roomType, List<Reservation> reservations) {
+    public RoomRate(Enum rateType, BigDecimal ratePerNight, Date validFrom, Date validTo) {
         this.rateType = rateType;
         this.ratePerNight = ratePerNight;
         this.validFrom = validFrom;
         this.validTo = validTo;
-        this.roomType = roomType;
-        this.reservations = reservations;
     }
+
+
     
     public Long getRoomRateId() {
         return roomRateId;
