@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entity;
 
 import enums.RoleEnum;
@@ -24,18 +20,36 @@ public class Employee implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long employeeId;
     
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(nullable = false, unique = true, length = 20)
     private String username;
 
-    @Column(nullable = false, length = 100)
-    private String password; // Requires hashing/encryption
-
+    @Column(nullable = false, length = 64)
+    private String password; 
+    
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RoleEnum role;
+    
+    @Column(nullable = false, length = 60)
+    private String email;
+    
+    @Column(nullable = false)
+    private boolean loggedIn = false;
+
+
+    public Employee(){
+        
+    }
+    
+    public Employee(String username, String password, RoleEnum role, String email) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.email = email;
+    }
 
     public Long getEmployeeId() {
         return employeeId;
@@ -64,6 +78,25 @@ public class Employee implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+    
+    
+    public RoleEnum getRole() {
+        return role;
+    }
+    
+    public void setRole(RoleEnum role) {
+        this.role = role;
+    }
+
+    
+    public String getEmail() {
+        return email;
+    }
+
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     @Override
     public int hashCode() {
@@ -88,6 +121,15 @@ public class Employee implements Serializable {
     @Override
     public String toString() {
         return "entity.employee[ id=" + employeeId + " ]";
+    }
+
+    public boolean isLoggedIn() {
+        return loggedIn;
+    }
+      
+    
+    public void setLoggedIn(boolean loggedIn) {
+        this.loggedIn = loggedIn;
     }
     
 }
