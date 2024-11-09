@@ -34,6 +34,8 @@ public class RoomRate implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long roomRateId;
+    @Column(nullable = false, length = 64)
+    private String roomRateName;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Enum rateType;
@@ -45,6 +47,8 @@ public class RoomRate implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date validTo;
+    @Column(nullable = false, length = 64)
+    private Boolean isDisabled;
     
     // relationships
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
@@ -59,15 +63,16 @@ public class RoomRate implements Serializable {
         reservations = new ArrayList<>();
     }
 
-    public RoomRate(Enum rateType, BigDecimal ratePerNight, Date validFrom, Date validTo) {
+    public RoomRate(String roomRateName, Enum rateType, BigDecimal ratePerNight, Date validFrom, Date validTo, Boolean isDisabled, RoomType roomType) {
+        this.roomRateName = roomRateName;
         this.rateType = rateType;
         this.ratePerNight = ratePerNight;
         this.validFrom = validFrom;
         this.validTo = validTo;
+        this.isDisabled = isDisabled;
+        this.roomType = roomType;
     }
 
-
-    
     public Long getRoomRateId() {
         return roomRateId;
     }
@@ -75,6 +80,21 @@ public class RoomRate implements Serializable {
     public void setRoomRateId(Long roomRateId) {
         this.roomRateId = roomRateId;
     }
+    
+    /**
+     * @return the roomRateName
+     */
+    public String getRoomRateName() {
+        return roomRateName;
+    }
+
+    /**
+     * @param roomRateName the roomRateName to set
+     */
+    public void setRoomRateName(String roomRateName) {
+        this.roomRateName = roomRateName;
+    }
+
     
     /**
      * @return the rateType
@@ -130,6 +150,20 @@ public class RoomRate implements Serializable {
      */
     public void setValidTo(Date validTo) {
         this.validTo = validTo;
+    }
+    
+    /**
+     * @return the isDisabled
+     */
+    public Boolean getIsDisabled() {
+        return isDisabled;
+    }
+
+    /**
+     * @param isDisabled the isDisabled to set
+     */
+    public void setIsDisabled(Boolean isDisabled) {
+        this.isDisabled = isDisabled;
     }
 
     @Override

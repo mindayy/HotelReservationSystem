@@ -8,13 +8,10 @@
     <class>entity.RoomRate</class>
     <class>entity.RoomType</class>
     <class>entity.Employee</class>
-<<<<<<< HEAD
-=======
     <class>entity.ReserveRoom</class>
     <class>entity.Exception</class>
     <class>entity.Room</class>
     <class>entity.Partner</class>
->>>>>>> d4470db41ffe99b8bbd93767a6400f67d75c8d62
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.schema-generation.database.action" value="create"/>
