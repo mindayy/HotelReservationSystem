@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entity;
 
 import java.io.Serializable;
@@ -9,6 +5,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,24 +15,43 @@ import javax.persistence.OneToMany;
 @Entity
 public class Partner implements Serializable {
 
-    
+
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long partnerId;
     
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(nullable = false, unique = true, length = 32)
     private String username;
 
-    @Column(nullable = false, length = 100)
-    private String password; // Requires hashing/encryption
+    @Column(nullable = false, length = 64)
+    private String password; 
 
     @Column(nullable = false, length = 100)
     private String name;
+    
+    @Column(nullable = false, length = 100, unique = true)
+    private String email;
 
-    @OneToMany(mappedBy = "partner", cascade = CascadeType.ALL)
+    @Column(nullable = false)
+    private boolean loggedIn = false;
+    
+    @OneToMany(mappedBy = "partner", cascade = {}, fetch = FetchType.LAZY)
     private List<Reservation> reservations;
 
+    
+    public Partner() {
+        
+    }
+    
+    public Partner(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.loggedIn = false;
+    }
+
+    
     public Long getPartnerId() {
         return partnerId;
     }
@@ -84,6 +100,25 @@ public class Partner implements Serializable {
         this.reservations = reservations;
     }
 
+
+    public String getEmail() {
+        return email;
+    }
+
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+
+    public boolean isLoggedIn() {
+        return loggedIn;
+    }
+
+
+    public void setLoggedIn(boolean loggedIn) {
+        this.loggedIn = loggedIn;
+    }
 
     @Override
     public int hashCode() {

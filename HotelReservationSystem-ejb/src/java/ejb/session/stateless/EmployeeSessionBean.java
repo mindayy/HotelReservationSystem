@@ -20,12 +20,13 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
     public EmployeeSessionBean() {
     }
 
+    @Override
     public void createEmployee(String username, String password, RoleEnum role, String email) {
         Employee employee = new Employee(username, password, role, email);
         em.persist(employee);
     }
 
-    
+    @Override
     public Employee retrieveEmployeeById(Long employeeId) throws EmployeeNotFoundException {
         Employee employee = em.find(Employee.class, employeeId);
         if (employee != null) {
@@ -36,6 +37,7 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
     }
 
 
+    @Override
     public Employee employeeLogin(String username, String password) throws InvalidLoginCredentialException {
         Query query = em.createQuery("SELECT e FROM Employee e WHERE e.username = :inUsername");
         query.setParameter("inUsername", username);
@@ -57,11 +59,13 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
         }
     }
 
+    @Override
     public List<Employee> retrieveAllEmployees() {
         Query query = em.createQuery("SELECT e FROM Employee e");
         return query.getResultList();
     }
 
+    @Override
     public void employeeLogout(Long employeeId) throws EmployeeNotFoundException {
         Employee employee = em.find(Employee.class, employeeId);
         if (employee != null) {

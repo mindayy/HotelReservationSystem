@@ -4,10 +4,14 @@
  */
 package entity;
 
+import enums.RoomStatusEnum;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,25 +26,49 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Room implements Serializable {
 
-
+    
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomId;
     
-    @Column(nullable = false)
-    private String roomType;
+    @Column(nullable = false, length = 4, unique = true)
+    private String roomNumber;
     
+    /*
     @Column(nullable = false)
-    private Boolean isAvailable;
+    private String roomType; // i think dont need this? its jst private RoomType roomType hor or need a string of this...? 
+    */
+    
+    /*
+    @Column(nullable = false)
+    private Boolean isAvailable; // feels like this is not needed since got roomStatusEnum alr? thoughts? 
+    */ 
     
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private RoomType roomTypeEntity;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RoomStatusEnum roomStatus;
+    
+    @Column(nullable = false)
+    private boolean isDeleted = false;  // Soft delete indicator but still need to kiv 
 
-    @ManyToMany(mappedBy = "rooms")
+    @ManyToMany(mappedBy = "rooms", cascade = {}, fetch = FetchType.LAZY)
     private List<Reservation> reservations;
     
+    
+    public Room() {
+    }
+
+    public Room(String roomNumber, RoomType roomType, RoomStatusEnum roomStatus) {
+        this.roomNumber = roomNumber;
+        this.roomTypeEntity = roomType;
+        this.roomStatus = roomStatus;
+        this.isDeleted = false;  // When created, the room is active (not deleted)
+    }
 
     public Long getRoomId() {
         return roomId;
@@ -50,6 +78,59 @@ public class Room implements Serializable {
         this.roomId = roomId;
     }
     
+   
+    public String getRoomNumber() {
+        return roomNumber;
+    }
+
+    
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+   
+    public RoomType getRoomTypeEntity() {
+        return roomTypeEntity;
+    }
+
+    
+    public void setRoomTypeEntity(RoomType roomTypeEntity) {
+        this.roomTypeEntity = roomTypeEntity;
+    }
+
+    
+    public RoomStatusEnum getRoomStatus() {
+        return roomStatus;
+    }
+
+    
+    public void setRoomStatus(RoomStatusEnum roomStatus) {
+        this.roomStatus = roomStatus;
+    }
+
+    
+    public boolean isIsDeleted() {
+        return isDeleted;
+    }
+
+    
+    public void setIsDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+
+
+    
+    /*
     public String getRoomType() {
         return roomType;
     }
@@ -58,6 +139,7 @@ public class Room implements Serializable {
     public void setRoomType(String roomType) {
         this.roomType = roomType;
     }
+    
 
     
     public Boolean getIsAvailable() {
@@ -69,6 +151,7 @@ public class Room implements Serializable {
         this.isAvailable = isAvailable;
     }
     
+    */
     
     @Override
     public int hashCode() {

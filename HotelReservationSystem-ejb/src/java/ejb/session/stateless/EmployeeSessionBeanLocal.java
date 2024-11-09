@@ -4,7 +4,12 @@
  */
 package ejb.session.stateless;
 
+import entity.Employee;
+import enums.RoleEnum;
+import java.util.List;
 import javax.ejb.Local;
+import util.exception.EmployeeNotFoundException;
+import util.exception.InvalidLoginCredentialException;
 
 /**
  *
@@ -12,5 +17,14 @@ import javax.ejb.Local;
  */
 @Local
 public interface EmployeeSessionBeanLocal {
+    public void createEmployee(String username, String password, RoleEnum role, String email);
     
+    public Employee retrieveEmployeeById(Long employeeId) throws EmployeeNotFoundException;
+    
+    public Employee employeeLogin(String username, String password) throws InvalidLoginCredentialException;
+    
+    public List<Employee> retrieveAllEmployees();
+    
+    public void employeeLogout(Long employeeId) throws EmployeeNotFoundException;
+   
 }

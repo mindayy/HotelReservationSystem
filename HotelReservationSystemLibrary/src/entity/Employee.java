@@ -49,6 +49,8 @@ public class Employee implements Serializable {
         this.password = password;
         this.role = role;
         this.email = email;
+        this.loggedIn = false;
+        
     }
 
     public Long getEmployeeId() {
