@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,7 +31,6 @@ import javax.persistence.TemporalType;
 @Entity
 public class Reservation implements Serializable {
 
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,6 +43,9 @@ public class Reservation implements Serializable {
     private Date checkOutDate;
     @Column(nullable = false, precision = 11, scale = 2)
     private BigDecimal reservationAmt;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Enum reservationStatus;
     
     // relationships
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
@@ -69,13 +73,12 @@ public class Reservation implements Serializable {
     }
     
     // overloaded constructor
-
-    public Reservation(Date checkInDate, Date checkOutDate, BigDecimal reservationAmt) {
+    public Reservation(Date checkInDate, Date checkOutDate, BigDecimal reservationAmt, Enum reservationStatus) {
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.reservationAmt = reservationAmt;
+        this.reservationStatus = reservationStatus;
     }
-
 
     public Long getReservationId() {
         return reservationId;
@@ -141,7 +144,19 @@ public class Reservation implements Serializable {
     public void setRoomRates(List<RoomRate> roomRates) {
         this.roomRates = roomRates;
     }
+        /**
+     * @return the reservationStatus
+     */
+    public Enum getReservationStatus() {
+        return reservationStatus;
+    }
 
+    /**
+     * @param reservationStatus the reservationStatus to set
+     */
+    public void setReservationStatus(Enum reservationStatus) {
+        this.reservationStatus = reservationStatus;
+    }
 
     @Override
     public int hashCode() {
