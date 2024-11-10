@@ -6,6 +6,7 @@ package ejb.session.stateless;
 
 import entity.RoomRate;
 import entity.RoomType;
+import enums.RateTypeEnum;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -27,7 +28,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
     private EntityManager em;
 
     @Override
-    public Long createNewRoomType(RoomRate roomRate) {
+    public Long createNewRoomRate(RoomRate roomRate) {
 	em.persist(roomRate);
         em.flush();
  
@@ -35,8 +36,16 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
     }
     
     @Override
-    public RoomRate getRoomRateDetails(Long roomRateId) {
-        return em.find(RoomRate.class, roomRateId);
+    public RoomRate retrieveRoomRateById(Long roomRateId) throws RoomRateNotFoundException {
+        RoomRate roomRate = em.find(RoomRate.class, roomRateId);
+        
+        if (roomRate != null) {
+            return roomRate;
+        }
+        else
+        {
+            throw new RoomRateNotFoundException("Room Rate with ID " + roomRateId + " not found.");
+        }
     }
     
     @Override
@@ -46,45 +55,24 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
     } 
     
     @Override
-    public void updateRoomRate(Long roomRateId, String name, Long roomTypeId, Enum rateType, 
-                                    BigDecimal ratePerNight, Date validFrom, Date validTo, 
-                                    Boolean isDisabled) throws RoomTypeNotFoundException, RoomRateNotFoundException 
-    {
+    public void updateRoomRate(RoomRate roomRate)  {
+        em.merge(roomRate); 
 
-        RoomRate roomRateToUpdate = em.find(RoomRate.class, roomRateId);
-        if (roomRateToUpdate == null) {
-            throw new RoomRateNotFoundException("Room Rate with ID " + roomRateId + " not found."); 
-        }
-
-        RoomType roomType = em.find(RoomType.class, roomTypeId); 
-        if (roomType == null) {
-            throw new RoomTypeNotFoundException("Room Type with ID " + roomTypeId + " not found."); 
-        }
-
-        roomRateToUpdate.setRoomRateName(name);
-        roomRateToUpdate.setRoomType(roomType);
-        roomRateToUpdate.setRateType(rateType);
-        roomRateToUpdate.setRatePerNight(ratePerNight); 
-        roomRateToUpdate.setValidFrom(validFrom);
-        roomRateToUpdate.setValidTo(validTo);
     }
     
     @Override
-    public void deleteRoomRate(Long roomRateId) throws RoomRateNotFoundException {
-        RoomType roomRateToDelete = em.find(RoomType.class, roomRateId);
+    public void deleteRoomRate(RoomRate roomRateToDelete) {
         if (roomRateToDelete != null) {
-            if (isRoomRateInUse(roomRateId)) {
+            if (isRoomRateInUse(roomRateToDelete)) {
                 roomRateToDelete.setIsDisabled(true);
                 em.merge(roomRateToDelete);
             } else {
                 em.remove(roomRateToDelete);
             }
-        } else {
-            throw new RoomRateNotFoundException("Room Rate with ID " + roomRateId + " not found.");
         }
     }
 
-    private boolean isRoomRateInUse(Long roomRateId) {
+    private boolean isRoomRateInUse(RoomRate roomRateToDelete) {
         //logic to be inserted
         return false;
 

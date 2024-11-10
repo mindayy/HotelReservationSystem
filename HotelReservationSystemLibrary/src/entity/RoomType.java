@@ -40,8 +40,6 @@ public class RoomType implements Serializable {
     private String amenities;
     @Column(nullable = false, length = 64)
     private Boolean isDisabled;
-    @Column(nullable = false, length = 64)
-    private Boolean roomTypeStatus;
     
     // relationships
     @OneToMany(mappedBy = "roomType", cascade = {}, fetch = FetchType.LAZY)
@@ -62,7 +60,7 @@ public class RoomType implements Serializable {
     
     // overloaded constructor
 
-    public RoomType(String name, String description, int size, String bed, int capacity, String amenities, Boolean isDisabled, Boolean roomTypeStatus) {
+    public RoomType(String name, String description, int size, String bed, int capacity, String amenities, Boolean isDisabled) {
         this.name = name;
         this.description = description;
         this.size = size;
@@ -70,7 +68,6 @@ public class RoomType implements Serializable {
         this.capacity = capacity;
         this.amenities = amenities;
         this.isDisabled = isDisabled;
-        this.roomTypeStatus = roomTypeStatus;
     }
 
     
@@ -179,20 +176,6 @@ public class RoomType implements Serializable {
      */
     public void setIsDisabled(Boolean isDisabled) {
         this.isDisabled = isDisabled;
-    }
-
-    /**
-     * @return the roomTypeStatus
-     */
-    public Boolean getRoomTypeStatus() {
-        return roomTypeStatus;
-    }
-
-    /**
-     * @param roomTypeStatus the roomTypeStatus to set
-     */
-    public void setRoomTypeStatus(Boolean roomTypeStatus) {
-        this.roomTypeStatus = roomTypeStatus;
     }
 
     @Override

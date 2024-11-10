@@ -8,10 +8,20 @@ import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
+import entity.RoomRate;
 import entity.RoomType;
+import enums.RateTypeEnum;
 import enums.RoleEnum;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import util.exception.InvalidAccessRightException;
+import util.exception.RoomRateNotFoundException;
 import util.exception.RoomTypeNotFoundException;
 
 /**
@@ -39,9 +49,9 @@ public class HotelOperationModule {
     
     
 
-    void menuHotelOperation() throws InvalidAccessRightException{
-        if (currentEmployee.getRole() != RoleEnum.OperationManager || currentEmployee.getRole() != RoleEnum.SalesManager) {
-            throw new InvalidAccessRightException("You do not have the rights to access the System Administration Module.");
+    void menuHotelOperation() throws InvalidAccessRightException {
+        if (currentEmployee.getRole() != RoleEnum.OperationManager && currentEmployee.getRole() != RoleEnum.SalesManager) {
+            throw new InvalidAccessRightException("You do not have the rights to access the Hotel Operation Module.");
         }
     
         Scanner scanner = new Scanner(System.in);
@@ -155,7 +165,7 @@ public class HotelOperationModule {
         newRoomType.setCapacity(capacity);
         System.out.print("Enter Room Type Amenities> ");
         newRoomType.setAmenities(scanner.nextLine().trim());
-        newRoomType.setIsDisabled(Boolean.FALSE);
+        newRoomType.setIsDisabled(false);
 
         Long newRoomTypeId = roomTypeSessionBeanRemote.createNewRoomType(newRoomType);
         System.out.println("New room type created successfully!: " + newRoomTypeId + "\n");
@@ -166,15 +176,15 @@ public class HotelOperationModule {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
         
-        System.out.println("*** Hotel Reservation System :: System Administration :: View Room Type Details ***\n");
+        System.out.println("*** Hotel Reservation System :: Hotel Operation :: View Room Type Details ***\n");
         System.out.print("Enter Room Type ID> ");
         Long roomTypeId = scanner.nextLong();
 
         try {
             RoomType roomType = roomTypeSessionBeanRemote.retrieveRoomTypeById(roomTypeId);
-            System.out.printf("%8s%20s%64s%8s%20s%8s%64s\n", "Room Type Id", "Name",
+            System.out.printf("%-12s %-20s %-30s %-10s %-12s %-10s %-30s\n", "Room Type Id", "Name",
                     "Description", "Size", "Bed", "Capacity", "Amenities");
-            System.out.printf("%8s%20s%64s%8s%20s%8s%64s\n", roomType.getRoomTypeId(), roomType.getName(),
+            System.out.printf("%-12s %-20s %-30s %-10s %-12s %-10s %-30s\n", roomType.getRoomTypeId(), roomType.getName(),
                     roomType.getDescription(), roomType.getSize(), roomType.getBed(), roomType.getCapacity(), roomType.getAmenities());
             System.out.println("------------------------");
             System.out.println("1: Update Room Type");
@@ -196,7 +206,7 @@ public class HotelOperationModule {
         {
             System.out.println("An error has occurred while retrieving room type: " + ex.getMessage() + "\n");
         }
-        }
+    }
 
     private void doUpdateRoomType(RoomType roomType) {
         Scanner scanner = new Scanner(System.in);        
@@ -250,7 +260,7 @@ public class HotelOperationModule {
             roomType.setAmenities(input);
         }
         roomTypeSessionBeanRemote.updateRoomType(roomType);
-         System.out.println("Room type updated successfully!\n");
+        System.out.println("Room type updated successfully!\n");
     }
 
     private void doDeleteRoomType(RoomType roomType) {
@@ -258,7 +268,7 @@ public class HotelOperationModule {
         String input;
         
         System.out.println("*** Hotel Reservation System :: Hotel Operation :: View Room type Details :: Delete Room Type ***\n");
-        System.out.printf("Confirm Delete Room Tuype %s (Room Type ID: %d) (Enter 'Y' to Delete)> ", roomType.getName(), roomType.getRoomTypeId());
+        System.out.printf("Confirm Delete Room Type %s (Room Type ID: %d) (Enter 'Y' to Delete)> ", roomType.getName(), roomType.getRoomTypeId());
         input = scanner.nextLine().trim();
         
         if(input.equals("Y"))
@@ -275,9 +285,246 @@ public class HotelOperationModule {
     }
 
     private void doViewAllRoomTypes() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("*** Hotel Reservation System :: Hotel Operation :: View All Room Types ***\n");
+        
+        List<RoomType> roomTypes = roomTypeSessionBeanRemote.viewAllRoomTypes();
+        System.out.printf("%-12s %-20s %-30s %-10s %-12s %-10s %-30s\n", "Room Type Id", "Name",
+                    "Description", "Size", "Bed", "Capacity", "Amenities");
+
+        for(RoomType roomType:roomTypes)
+        {
+            System.out.printf("%-12s %-20s %-30s %-10s %-12s %-10s %-30s\n", roomType.getRoomTypeId(), roomType.getName(),
+                    roomType.getDescription(), roomType.getSize(), roomType.getBed(), roomType.getCapacity(), roomType.getAmenities());
+        }
+        
+        System.out.print("Press any key to continue...> ");
+        scanner.nextLine();
     }
 
+    private void doCreateNewRoomRate() {
+       Scanner scanner = new Scanner(System.in);
+        RoomRate newRoomRate = new RoomRate();
+        
+        System.out.println("*** Hotel Reservation System :: Hotel Operation :: Create New Room Rate ***\n");
+        System.out.print("Enter Room Rate Name> ");
+        newRoomRate.setRoomRateName(scanner.nextLine().trim());
+        System.out.print("Enter Room Type Id> ");
+        Long roomTypeId = Long.parseLong(scanner.nextLine().trim());
+        RoomType roomType;
+        try {
+            roomType = roomTypeSessionBeanRemote.retrieveRoomTypeById(roomTypeId);
+            newRoomRate.setRoomType(roomType);
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("An error has occurred while retrieving room type: " + ex.getMessage() + "\n");
+        }
+        System.out.print("Enter Room Rate Per Night> ");
+        String rateInput = scanner.nextLine().trim();
+        BigDecimal ratePerNight = new BigDecimal(rateInput);
+        newRoomRate.setRatePerNight(ratePerNight);
+        
+        while(true)
+        {
+            System.out.print("Select Room Rate Type (1: Published, 2: Normal, 3: Peak, 4: Promotion)> ");
+            Integer rateTypeInt = scanner.nextInt();
+            
+            if(rateTypeInt >= 1 && rateTypeInt <= 4)
+            {
+                newRoomRate.setRateType(RateTypeEnum.values()[rateTypeInt-1]);
+                break;
+            }
+            else
+            {
+                System.out.println("Invalid option, please try again!\n");
+            }
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        if (newRoomRate.getRateType() == RateTypeEnum.PEAK || newRoomRate.getRateType() == RateTypeEnum.PROMOTION) {
+           try {
+               System.out.print("Enter Room Rate Start Date (yyyy-MM-dd) > ");
+               String startDateInput = scanner.nextLine().trim();
+               Date startDate = dateFormat.parse(startDateInput); // Convert String to Date
+               newRoomRate.setValidFrom(startDate);
+               System.out.print("Enter Room Rate End Date (yyyy-MM-dd) > ");
+               String endDateInput = scanner.nextLine().trim();
+               Date endDate = dateFormat.parse(endDateInput); // Convert String to Date
+               newRoomRate.setValidTo(endDate);
+           } catch (ParseException ex) {
+               System.out.println("Please enter a valid Room Rate! \n");
+           }
+        }
+
+
+        Long newRoomRateId = roomRateSessionBeanRemote.createNewRoomRate(newRoomRate);
+        System.out.println("New room type created successfully!: " + newRoomRateId + "\n");
+    }
+
+    private void doViewRoomRateDetails() {
+        Scanner scanner = new Scanner(System.in);
+        Integer response = 0;
+        
+        System.out.println("*** Hotel Reservation System :: Hotel Operation :: View Room Rate Details ***\n");
+        System.out.print("Enter Room Rate ID> ");
+        Long roomRateId = scanner.nextLong();
+
+        try {
+            RoomRate roomRate = roomRateSessionBeanRemote.retrieveRoomRateById(roomRateId);
+            if (roomRate.getRateType() == RateTypeEnum.PEAK || roomRate.getRateType() == RateTypeEnum.PROMOTION) {
+                System.out.printf("%-12s %-12s %-12s %-12s %-12s %-12s %-12s \n", "Room Rate Id", "Name",
+                        "Rate Type", "Rate Per Night", "Valid From", "Valid To", "Room Type Id");
+                System.out.printf("%-12s %-12s %-12s %-12s %-12s  %-12s %-12s \n", roomRate.getRoomRateId(), roomRate.getRoomRateName(),
+                        roomRate.getRateType(), roomRate.getRatePerNight(), roomRate.getValidFrom(), roomRate.getValidTo(), roomRate.getRoomType());
+            }
+            else
+            {
+                System.out.printf("%-12s %-12s %-12s %-12s %-12s \n", "Room Rate Id", "Name",
+                    "Rate Type", "Rate Per Night", "Room Type Id");
+                System.out.printf("%-12s %-12s %-12s %-12s %-12s \n", roomRate.getRoomRateId(), roomRate.getRoomRateName(),
+                    roomRate.getRateType(), roomRate.getRatePerNight(), roomRate.getRoomType());
+            }
+            
+            System.out.println("------------------------");
+            System.out.println("1: Update Room Rate");
+            System.out.println("2: Delete Room Rate");
+            System.out.println("3: Back\n");
+            System.out.print("> ");
+            response = scanner.nextInt();
+            
+            if(response == 1)
+            {
+                doUpdateRoomRate(roomRate);
+            }
+            else if(response == 2)
+            {
+                doDeleteRoomRate(roomRate);
+            }
+        }
+        catch(RoomRateNotFoundException ex)
+        {
+            System.out.println("An error has occurred while retrieving room rate: " + ex.getMessage() + "\n");
+        }
+    }
+
+    private void doViewAllRoomRates() {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("*** Hotel Reservation System :: Hotel Operation :: View All Room Rates ***\n");
+        
+        List<RoomRate> roomRates = roomRateSessionBeanRemote.viewAllRoomRates();
+        System.out.printf("%-12s %-12s %-12s %-12s %-12s %-12s %-12s \n", "Room Rate Id", "Name",
+                        "Rate Type", "Rate Per Night", "Valid From", "Valid To", "Room Type Id");
+
+        for(RoomRate roomRate:roomRates)
+        {
+            if (roomRate.getRateType() == RateTypeEnum.PEAK || roomRate.getRateType() == RateTypeEnum.PROMOTION) {
+                System.out.printf("%-12s %-12s %-12s %-12s %-12s  %-12s %-12s \n", roomRate.getRoomRateId(), roomRate.getRoomRateName(),
+                        roomRate.getRateType(), roomRate.getRatePerNight(), roomRate.getValidFrom(), roomRate.getValidTo(), roomRate.getRoomType());
+            }
+            else 
+            {
+                System.out.printf("%-12s %-12s %-12s %-12s %-12s  %-12s %-12s \n", roomRate.getRoomRateId(), roomRate.getRoomRateName(),
+                        roomRate.getRateType(), roomRate.getRatePerNight(), "N/A", "N/A", roomRate.getRoomType());
+            }
+        }
+        
+        System.out.print("Press any key to continue...> ");
+        scanner.nextLine();
+    }
+
+    private void doUpdateRoomRate(RoomRate roomRate) {
+        Scanner scanner = new Scanner(System.in);        
+        String input;
+        // name, rate type, rate per night, validfrom, validto, roomtypeid
+        System.out.println("*** Hotel Reservation System :: Hotel Operation :: View Room Rate Details :: Update Room Rate ***\n");
+        System.out.print("Enter Name (blank if no change)> ");
+        input = scanner.nextLine().trim();
+        if(input.length() > 0)
+        {
+            roomRate.setRoomRateName(input);
+        }
+                
+        System.out.print("Enter Rate Per Night(blank if no change)> ");
+        input = scanner.nextLine().trim();
+        if(input.length() > 0)
+        {
+            BigDecimal ratePerNight = new BigDecimal(input);
+            roomRate.setRatePerNight(ratePerNight);
+        }
+        
+        System.out.print("Enter Room Type Id (blank if no change)> ");
+        input = scanner.nextLine().trim();
+        if(input.length() > 0) {
+            Long roomTypeId = Long.parseLong(scanner.nextLine().trim());
+            RoomType roomType;
+            try {
+                roomType = roomTypeSessionBeanRemote.retrieveRoomTypeById(roomTypeId);
+                roomRate.setRoomType(roomType);
+            } catch (RoomTypeNotFoundException ex) {
+                System.out.println("An error has occurred while retrieving room type: " + ex.getMessage() + "\n");
+            }
+        }
+        
+        while(true)
+        {
+            System.out.print("Enter Room Rate Type (1: Published, 2: Normal, 3: Peak, 4: Promotion, blank if no change)> ");
+            Integer rateTypeInt = scanner.nextInt();
+            
+            if(input.length() > 0) 
+            {
+                roomRate.setRateType(RateTypeEnum.values()[rateTypeInt-1]);
+                break;
+            }
+            else
+            {
+                System.out.println("Invalid option, please try again!\n");
+            }
+        }
+        
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        if (roomRate.getRateType() == RateTypeEnum.PEAK || roomRate.getRateType() == RateTypeEnum.PROMOTION) {
+            try {
+               System.out.print("Enter Room Rate Start Date (yyyy-MM-dd) (blank if no change)> ");
+               String startDateInput = scanner.nextLine().trim();
+               if(startDateInput.length() > 0) {
+                    Date startDate = dateFormat.parse(startDateInput); // Convert String to Date
+                    roomRate.setValidFrom(startDate);
+               }
+               System.out.print("Enter Room Rate End Date (yyyy-MM-dd) (blank if no change)> ");
+               String endDateInput = scanner.nextLine().trim();
+               if(endDateInput.length() > 0) {
+                    Date endDate = dateFormat.parse(endDateInput); // Convert String to Date
+                    roomRate.setValidTo(endDate);
+               }
+            } catch (ParseException ex) {
+               System.out.println("Please enter a valid Room Rate! \n");
+            }
+        }
+        roomRateSessionBeanRemote.updateRoomRate(roomRate);
+        System.out.println("Room type updated successfully!\n");
+    }
+
+    private void doDeleteRoomRate(RoomRate roomRate) {
+        Scanner scanner = new Scanner(System.in);        
+        String input;
+        
+        System.out.println("*** Hotel Reservation System :: Hotel Operation :: View Room Rate Details :: Delete Room Rate ***\n");
+        System.out.printf("Confirm Delete Room Rate %s (Room Rate ID: %d) (Enter 'Y' to Delete)> ", roomRate.getRoomRateName(), roomRate.getRoomRateId());
+        input = scanner.nextLine().trim();
+        
+        if(input.equals("Y"))
+        {
+ 
+            roomRateSessionBeanRemote.deleteRoomRate(roomRate);
+            System.out.println("Room Rate deleted successfully!\n");
+
+        }
+        else
+        {
+            System.out.println("Room Rate NOT deleted!\n");
+        }
+    }
+    
     private void doCreateNewRoom() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -295,18 +542,6 @@ public class HotelOperationModule {
     }
 
     private void doViewAllRoomAllocationExceptionReport() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private void doCreateNewRoomRate() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private void doViewRoomRateDetails() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private void doViewAllRoomRates() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

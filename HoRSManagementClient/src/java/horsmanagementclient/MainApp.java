@@ -68,9 +68,9 @@ class MainApp {
                         doLogin();
                         System.out.println("Login successful!\n");
                         
-                        systemAdministrationModule = new SystemAdministrationModule(employeeSessionBeanRemote, partnerSessionBeanRemote, currentEmployee);
+                        // systemAdministrationModule = new SystemAdministrationModule(employeeSessionBeanRemote, partnerSessionBeanRemote, currentEmployee);
                         hotelOperationModule = new HotelOperationModule(roomTypeSessionBeanRemote, roomSessionBeanRemote, roomRateSessionBeanRemote, currentEmployee);
-                        frontOfficeModule = new FrontOfficeModule(reservationSessionBeanRemote);
+                        // frontOfficeModule = new FrontOfficeModule(reservationSessionBeanRemote);
                         menuMain();
                     }
                     catch(InvalidLoginCredentialException ex) 
@@ -113,7 +113,8 @@ class MainApp {
         else
         {
             throw new InvalidLoginCredentialException();
-        }    }
+        }    
+    }
 
     private void menuMain() {
                 Scanner scanner = new Scanner(System.in);
@@ -122,7 +123,7 @@ class MainApp {
         while(true)
         {
             System.out.println("*** Hotel Reservation System ***\n");
-            System.out.println("You are login as " + currentEmployee.getUsername() + " with " + currentEmployee.getRole().toString() + " rights\n");
+            System.out.println("You are logged in as " + currentEmployee.getUsername() + " with " + currentEmployee.getRole().toString() + " rights\n");
             System.out.println("1: System Administration");
             System.out.println("2: Hotel Operation Module");
             System.out.println("3: Front Office Module");
@@ -181,6 +182,5 @@ class MainApp {
                 break;
             }
         }
-    }
-    
+    }  
 }

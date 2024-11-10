@@ -4,6 +4,7 @@
  */
 package entity;
 
+import enums.RateTypeEnum;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class RoomRate implements Serializable {
     private String roomRateName;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Enum rateType;
+    private RateTypeEnum rateType;
     @Column(nullable = false, precision = 11, scale = 2)
     private BigDecimal ratePerNight;
     @Temporal(TemporalType.TIMESTAMP)
@@ -63,7 +64,7 @@ public class RoomRate implements Serializable {
         reservations = new ArrayList<>();
     }
 
-    public RoomRate(String roomRateName, Enum rateType, BigDecimal ratePerNight, Date validFrom, Date validTo, Boolean isDisabled, RoomType roomType) {
+    public RoomRate(String roomRateName, RateTypeEnum rateType, BigDecimal ratePerNight, Date validFrom, Date validTo, Boolean isDisabled, RoomType roomType) {
         this.roomRateName = roomRateName;
         this.rateType = rateType;
         this.ratePerNight = ratePerNight;
@@ -106,7 +107,7 @@ public class RoomRate implements Serializable {
     /**
      * @param rateType the rateType to set
      */
-    public void setRateType(Enum rateType) {
+    public void setRateType(RateTypeEnum rateType) {
         this.rateType = rateType;
     }
 
