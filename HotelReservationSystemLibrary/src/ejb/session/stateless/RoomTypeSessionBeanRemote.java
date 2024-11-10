@@ -18,14 +18,12 @@ public interface RoomTypeSessionBeanRemote {
     
     public Long createNewRoomType(RoomType roomType);
     
-    public void updateRoomType(Long roomTypeId, String newName, String newDescription, 
-            int newSize, String newBed, int newCapacity, String newAmenities, 
-            Boolean isDisabled, Boolean roomTypeStatus) throws RoomTypeNotFoundException;
-        
+    public void updateRoomType(RoomType roomType);
+    
     public List<RoomType> viewAllRoomTypes();
     
-    public RoomType getRoomTypeDetails(Long roomTypeId);
+    public RoomType retrieveRoomTypeById(Long roomTypeId) throws RoomTypeNotFoundException;
     
-    public void deleteRoomType(Long roomTypeId) throws RoomTypeNotFoundException;
+    public void deleteRoomType(RoomType roomTypeToDelete);
     
 }

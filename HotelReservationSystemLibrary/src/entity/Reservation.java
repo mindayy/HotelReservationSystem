@@ -4,6 +4,7 @@
  */
 package entity;
 
+import enums.ReservationStatus;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class Reservation implements Serializable {
     private BigDecimal reservationAmt;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Enum reservationStatus;
+    private ReservationStatus reservationStatus;
     
     // relationships
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
@@ -63,17 +64,17 @@ public class Reservation implements Serializable {
     @JoinColumn(nullable = false)
     private RoomType roomType;
     
-    @ManyToMany(mappedBy = "reservations")
+    @ManyToMany
+    @JoinColumn(nullable = false)
     private List<RoomRate> roomRates;
 
-    
     public Reservation() {
         reserveRooms = new ArrayList<>();
         roomRates = new ArrayList<>();
     }
     
     // overloaded constructor
-    public Reservation(Date checkInDate, Date checkOutDate, BigDecimal reservationAmt, Enum reservationStatus) {
+    public Reservation(Date checkInDate, Date checkOutDate, BigDecimal reservationAmt, ReservationStatus reservationStatus) {
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.reservationAmt = reservationAmt;
@@ -154,7 +155,7 @@ public class Reservation implements Serializable {
     /**
      * @param reservationStatus the reservationStatus to set
      */
-    public void setReservationStatus(Enum reservationStatus) {
+    public void setReservationStatus(ReservationStatus reservationStatus) {
         this.reservationStatus = reservationStatus;
     }
 

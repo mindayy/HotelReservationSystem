@@ -23,8 +23,8 @@ public class ExceptionSessionBean implements ExceptionSessionBeanRemote, Excepti
 
     @Override
     public void createRoomAllocationException(ReserveRoom reserveRoom, String exceptionType, String message) {
-        Exception exception = new Exception(message, reserveRoom, exceptionType);
-        em.persist(exception);
+        // Exception exception = new Exception(message, reserveRoom, exceptionType);
+        // em.persist(exception);
     }
 
     @Override

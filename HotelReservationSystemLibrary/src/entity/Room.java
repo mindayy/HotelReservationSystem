@@ -16,8 +16,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -26,7 +26,6 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Room implements Serializable {
 
-    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,8 +46,8 @@ public class Room implements Serializable {
     @Column(nullable = false)
     private boolean isDeleted = false;  // Soft delete indicator but still need to kiv 
 
-    @ManyToMany(mappedBy = "rooms", cascade = {}, fetch = FetchType.LAZY)
-    private List<Reservation> reservations;
+    @OneToMany(mappedBy = "room", cascade = {}, fetch = FetchType.LAZY)
+    private List<ReserveRoom> reserveRoom;
     
     
     public Room() {
@@ -110,15 +109,21 @@ public class Room implements Serializable {
     }
 
     
-    public List<Reservation> getReservations() {
-        return reservations;
+    /**
+     * @return the reserveRoom
+     */
+    public List<ReserveRoom> getReserveRoom() {
+        return reserveRoom;
+    }
+
+    /**
+     * @param reserveRoom the reserveRoom to set
+     */
+    public void setReserveRoom(List<ReserveRoom> reserveRoom) {
+        this.reserveRoom = reserveRoom;
     }
 
     
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
-    }
-
     
     @Override
     public int hashCode() {

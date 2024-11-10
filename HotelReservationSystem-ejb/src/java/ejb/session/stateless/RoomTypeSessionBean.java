@@ -31,8 +31,16 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
     }
     
     @Override
-    public RoomType getRoomTypeDetails(Long roomTypeId) {
-        return em.find(RoomType.class, roomTypeId);
+    public RoomType retrieveRoomTypeById(Long roomTypeId) throws RoomTypeNotFoundException {
+        RoomType roomType = em.find(RoomType.class, roomTypeId);
+        
+        if (roomType != null) {
+            return roomType;
+        }
+        else
+        {
+            throw new RoomTypeNotFoundException("Room Type with ID " + roomTypeId + " not found.");
+        }
     }
     
     @Override
@@ -42,44 +50,24 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
     } 
     
     @Override
-    public void updateRoomType(Long roomTypeId, String newName, String newDescription, 
-                             int newSize, String newBed, int newCapacity, 
-                             String newAmenities, Boolean isDisabled, Boolean roomTypeStatus) throws RoomTypeNotFoundException {
+    public void updateRoomType(RoomType roomType)  {
+        em.merge(roomType); 
 
-        RoomType roomType = em.find(RoomType.class, roomTypeId);
-
-        if (roomType != null) {
-            roomType.setName(newName);
-            roomType.setDescription(newDescription);
-            roomType.setSize(newSize);
-            roomType.setBed(newBed);
-            roomType.setCapacity(newCapacity);
-            roomType.setAmenities(newAmenities);
-            roomType.setIsDisabled(isDisabled);
-            roomType.setRoomTypeStatus(roomTypeStatus);
-
-            em.merge(roomType); 
-        } else {
-            throw new RoomTypeNotFoundException("Room Type with ID " + roomTypeId + " not found.");
-        }
     }
     
     @Override
-    public void deleteRoomType(Long roomTypeId) throws RoomTypeNotFoundException {
-        RoomType roomTypeToDelete = em.find(RoomType.class, roomTypeId);
+    public void deleteRoomType(RoomType roomTypeToDelete) {
         if (roomTypeToDelete != null) {
-            if (isRoomTypeInUse(roomTypeId)) {
+            if (isRoomTypeInUse(roomTypeToDelete)) {
                 roomTypeToDelete.setIsDisabled(true);
                 em.merge(roomTypeToDelete);
             } else {
                 em.remove(roomTypeToDelete);
             }
-        } else {
-            throw new RoomTypeNotFoundException("Room Type with ID " + roomTypeId + " not found.");
-        }
+        } 
     }
     
-    private boolean isRoomTypeInUse(Long roomTypeId) {
+    private boolean isRoomTypeInUse(RoomType roomTypeToDelete) {
         // logic to be added 
         return false; 
     }
