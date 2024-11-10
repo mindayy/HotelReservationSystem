@@ -34,7 +34,7 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
     public void updateRoom(Long roomId, RoomType roomType, RoomStatusEnum roomStatus) throws RoomNotFoundException {
         Room room = em.find(Room.class, roomId);
         if (room != null) {
-            room.setRoomTypeEntity(roomType);
+            room.setRoomType(roomType);
             room.setRoomStatus(roomStatus);
             em.merge(room);  // Merge the changes
         } else {

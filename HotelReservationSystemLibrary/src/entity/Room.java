@@ -35,19 +35,10 @@ public class Room implements Serializable {
     @Column(nullable = false, length = 4, unique = true)
     private String roomNumber;
     
-    /*
-    @Column(nullable = false)
-    private String roomType; // i think dont need this? its jst private RoomType roomType hor or need a string of this...? 
-    */
-    
-    /*
-    @Column(nullable = false)
-    private Boolean isAvailable; // feels like this is not needed since got roomStatusEnum alr? thoughts? 
-    */ 
     
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
-    private RoomType roomTypeEntity;
+    private RoomType roomType;
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -65,7 +56,7 @@ public class Room implements Serializable {
 
     public Room(String roomNumber, RoomType roomType, RoomStatusEnum roomStatus) {
         this.roomNumber = roomNumber;
-        this.roomTypeEntity = roomType;
+        this.roomType = roomType;
         this.roomStatus = roomStatus;
         this.isDeleted = false;  // When created, the room is active (not deleted)
     }
@@ -89,13 +80,13 @@ public class Room implements Serializable {
     }
 
    
-    public RoomType getRoomTypeEntity() {
-        return roomTypeEntity;
+    public RoomType getRoomType() {
+        return roomType;
     }
 
     
-    public void setRoomTypeEntity(RoomType roomTypeEntity) {
-        this.roomTypeEntity = roomTypeEntity;
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
     }
 
     
@@ -128,30 +119,6 @@ public class Room implements Serializable {
         this.reservations = reservations;
     }
 
-
-    
-    /*
-    public String getRoomType() {
-        return roomType;
-    }
-
-    
-    public void setRoomType(String roomType) {
-        this.roomType = roomType;
-    }
-    
-
-    
-    public Boolean getIsAvailable() {
-        return isAvailable;
-    }
-
-    
-    public void setIsAvailable(Boolean isAvailable) {
-        this.isAvailable = isAvailable;
-    }
-    
-    */
     
     @Override
     public int hashCode() {

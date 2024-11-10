@@ -5,10 +5,17 @@
 package entity;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  *
@@ -19,15 +26,64 @@ public class Exception implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long exceptionId;
+    
+    @Column(nullable = false)
+    private String message;  // Exception message
 
+    @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private ReserveRoom reserveRoom;  // Relationship with ReserveRoom entity
+
+    @Column(nullable = false)
+    private String exceptionType;  // Type of exception (upgrade/no room)
+
+    public Exception() {
+    }
+
+    public Exception(String message, ReserveRoom reserveRoom, String exceptionType) {
+        this.message = message;
+        this.reserveRoom = reserveRoom;
+        this.exceptionType = exceptionType;
+    }
+  
     public Long getExceptionId() {
         return exceptionId;
     }
 
     public void setExceptionId(Long exceptionId) {
         this.exceptionId = exceptionId;
+    }
+    
+
+    public String getMessage() {
+        return message;
+    }
+
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+
+    public ReserveRoom getReserveRoom() {
+        return reserveRoom;
+    }
+
+
+    public void setReserveRoom(ReserveRoom reserveRoom) {
+        this.reserveRoom = reserveRoom;
+    }
+
+
+    public String getExceptionType() {
+        return exceptionType;
+    }
+
+
+    public void setExceptionType(String exceptionType) {
+        this.exceptionType = exceptionType;
     }
 
     @Override
