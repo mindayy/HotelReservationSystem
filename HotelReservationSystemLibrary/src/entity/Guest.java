@@ -34,20 +34,22 @@ public class Guest implements Serializable {
     private String username;
     @Column(nullable = false, length = 64)
     private String password;
+    @Column(nullable = false)
+    private boolean isLoggedIn;
     
     @OneToMany(mappedBy = "guest", cascade = {}, fetch = FetchType.LAZY)
     private List<Reservation> reservations;
 
-    public Guest() {
+    public Guest(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
 
-    public Guest(String email, String username, String password, List<Reservation> reservations) {
+    public Guest(String email, String username, String password, boolean isLoggedIn) {
         this.email = email;
         this.username = username;
         this.password = password;
-        this.reservations = reservations;
+        this.isLoggedIn = isLoggedIn;
     }
-    
     
     public Long getGuestId() {
         return guestId;
@@ -97,6 +99,20 @@ public class Guest implements Serializable {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+    
+    /**
+     * @return the isLoggedIn
+     */
+    public boolean isIsLoggedIn() {
+        return isLoggedIn;
+    }
+
+    /**
+     * @param isLoggedIn the isLoggedIn to set
+     */
+    public void setIsLoggedIn(boolean isLoggedIn) {
+        this.isLoggedIn = isLoggedIn;
     }
 
 

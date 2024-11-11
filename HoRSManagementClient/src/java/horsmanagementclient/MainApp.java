@@ -67,7 +67,7 @@ class MainApp {
                         doLogin();
                         System.out.println("Login successful!\n");
                         
-                        // systemAdministrationModule = new SystemAdministrationModule(employeeSessionBeanRemote, partnerSessionBeanRemote, currentEmployee);
+                        systemAdministrationModule = new SystemAdministrationModule(employeeSessionBeanRemote, partnerSessionBeanRemote, currentEmployee);
                         hotelOperationModule = new HotelOperationModule(roomTypeSessionBeanRemote, roomSessionBeanRemote, roomRateSessionBeanRemote, currentEmployee);
                         frontOfficeModule = new FrontOfficeModule(reservationSessionBeanRemote, currentEmployee);
                         menuMain();

@@ -4,6 +4,11 @@
  */
 package horsreservationclient;
 
+import ejb.session.stateless.EmployeeSessionBeanRemote;
+import ejb.session.stateless.PartnerSessionBeanRemote;
+import ejb.session.stateless.ReservationSessionBeanRemote;
+import ejb.session.stateless.RoomRateSessionBeanRemote;
+import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import javax.ejb.EJB;
 
@@ -14,15 +19,22 @@ import javax.ejb.EJB;
 public class Main {
 
     @EJB
+    private static PartnerSessionBeanRemote partnerSessionBeanRemote;
+    @EJB
     private static RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
+    @EJB
+    private static RoomSessionBeanRemote roomSessionBeanRemote;
+    @EJB
+    private static RoomRateSessionBeanRemote roomRateSessionBeanRemote;
+    @EJB
+    private static ReservationSessionBeanRemote reservationSessionBeanRemote;
+    @EJB
+    private static EmployeeSessionBeanRemote employeeSessionBeanRemote;
     
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args)
-    {
-        MainApp mainApp = new MainApp(roomTypeSessionBeanRemote);
+    public static void main(String[] args) {
+        // TODO code application logic here
+        MainApp mainApp = new MainApp(roomTypeSessionBeanRemote, roomSessionBeanRemote, roomRateSessionBeanRemote, 
+                   reservationSessionBeanRemote, employeeSessionBeanRemote, partnerSessionBeanRemote);//insert session beans
         mainApp.runApp();
     }
     
