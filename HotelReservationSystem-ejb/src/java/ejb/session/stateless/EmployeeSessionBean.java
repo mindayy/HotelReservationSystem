@@ -45,7 +45,8 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
         try {
             Employee employee = (Employee) query.getSingleResult();
             if (employee.isLoggedIn()) {
-                throw new InvalidLoginCredentialException("Employee is already logged in.");
+                //throw new InvalidLoginCredentialException("Employee is already logged in.");
+                System.out.println("Employee is already logged in.");
             }
             if (employee.getPassword().equals(password)) {
                 employee.setLoggedIn(true); 
