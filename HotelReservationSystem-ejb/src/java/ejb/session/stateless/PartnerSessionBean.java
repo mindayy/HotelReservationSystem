@@ -26,8 +26,19 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
 
     @Override
     public void createPartner(String username, String password, String email) {
+        // Check if username or email already exists
+        Query query = em.createQuery("SELECT COUNT(p) FROM Partner p WHERE p.username = :username OR p.email = :email");
+        query.setParameter("username", username);
+        query.setParameter("email", email);
+        long count = (long)query.getSingleResult();
+
+        if (count > 0) {
+            throw new RuntimeException("Username or email already exists.");
+        }
+
+        // Create new partner and persist
         Partner partner = new Partner(username, password, email);
-        em.persist(partner);  
+        em.persist(partner); 
     }
 
     @Override

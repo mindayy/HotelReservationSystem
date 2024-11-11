@@ -123,6 +123,7 @@ public class SystemAdministrationModule {
             partnerSessionBeanRemote.createPartner(username, password, email);
             System.out.println("New partner created successfully!\n");
         } catch (Exception ex) {
+            ex.printStackTrace();  // Print full stack trace for better debugging
             System.out.println("An error occurred while creating the partner: " + ex.getMessage() + "\n");
         }
     }
