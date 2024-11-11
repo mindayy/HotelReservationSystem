@@ -12,7 +12,6 @@ import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
 import java.util.Scanner;
-import util.exception.EmployeeNotFoundException;
 import util.exception.InvalidAccessRightException;
 import util.exception.InvalidLoginCredentialException;
 
@@ -70,7 +69,7 @@ class MainApp {
                         
                         // systemAdministrationModule = new SystemAdministrationModule(employeeSessionBeanRemote, partnerSessionBeanRemote, currentEmployee);
                         hotelOperationModule = new HotelOperationModule(roomTypeSessionBeanRemote, roomSessionBeanRemote, roomRateSessionBeanRemote, currentEmployee);
-                        // frontOfficeModule = new FrontOfficeModule(reservationSessionBeanRemote);
+                        frontOfficeModule = new FrontOfficeModule(reservationSessionBeanRemote, currentEmployee);
                         menuMain();
                     }
                     catch(InvalidLoginCredentialException ex) 

@@ -5,6 +5,8 @@
 package ejb.session.stateless;
 
 import javax.ejb.Remote;
+import util.exception.ReservationNotFoundException;
+import util.exception.RoomAllocationException;
 
 /**
  *
@@ -12,5 +14,9 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface ReservationSessionBeanRemote {
+    
+    public void checkInGuest(Long reservationId) throws RoomAllocationException, ReservationNotFoundException;
+    
+    public void checkOutGuest(Long reservationId) throws ReservationNotFoundException;
     
 }

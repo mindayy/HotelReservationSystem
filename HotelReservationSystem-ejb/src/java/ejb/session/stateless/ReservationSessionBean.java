@@ -23,6 +23,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
     private EntityManager em;
     
+    @Override
     public void checkInGuest(Long reservationId) throws RoomAllocationException, ReservationNotFoundException {
         Reservation reservation = em.find(Reservation.class, reservationId);
         if (reservation == null) {
@@ -41,6 +42,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         em.merge(reservation); // Persist the changes
     }
     
+    @Override
     public void checkOutGuest(Long reservationId) throws ReservationNotFoundException {
         Reservation reservation = em.find(Reservation.class, reservationId);
         if (reservation == null) {

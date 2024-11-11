@@ -33,7 +33,7 @@ public class RoomRate implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomRateId;
     @Column(nullable = false, length = 64)
     private String roomRateName;
@@ -43,10 +43,10 @@ public class RoomRate implements Serializable {
     @Column(nullable = false, precision = 11, scale = 2)
     private BigDecimal ratePerNight;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Date validFrom;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Date validTo;
     @Column(nullable = false, length = 64)
     private Boolean isDisabled;

@@ -7,6 +7,7 @@ package ejb.session.stateless;
 import java.util.List;
 import javax.ejb.Local;
 import entity.ReserveRoom;
+import entity.RoomAllocationException;
 
 
 /**
@@ -18,6 +19,6 @@ public interface RoomAllocationExceptionSessionBeanLocal {
     
     public void createRoomAllocationException(ReserveRoom reserveRoom, String exceptionType, String message);
     
-    public List<Exception> retrieveRoomAllocationExceptions();
+    public List<RoomAllocationException> retrieveRoomAllocationExceptions();
     
 }
