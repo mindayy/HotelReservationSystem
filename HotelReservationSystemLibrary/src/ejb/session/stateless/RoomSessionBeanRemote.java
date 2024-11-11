@@ -20,7 +20,7 @@ public interface RoomSessionBeanRemote {
     
     public void createRoom(String roomNumber, RoomType roomType, RoomStatusEnum roomStatus);
     
-    public void updateRoom(Long roomId, RoomType roomType, RoomStatusEnum roomStatus) throws RoomNotFoundException;
+    public void updateRoom(Room updatedRoom) throws RoomNotFoundException;
     
     public void deleteRoom(Long roomId) throws RoomNotFoundException;
     

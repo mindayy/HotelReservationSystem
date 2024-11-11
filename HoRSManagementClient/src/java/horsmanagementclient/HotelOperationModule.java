@@ -8,10 +8,12 @@ import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
+import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
 import enums.RateTypeEnum;
 import enums.RoleEnum;
+import enums.RoomStatusEnum;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -526,11 +528,97 @@ public class HotelOperationModule {
     }
     
     private void doCreateNewRoom() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Scanner sc = new Scanner(System.in);
+        System.out.println("*** Hotel Reservation System :: Create New Room ***\n");
+
+        System.out.print("Enter Room Number> ");
+        String roomNumber = sc.nextLine().trim();
+
+        List<RoomType> roomTypes = roomTypeSessionBeanRemote.viewAllRoomTypes(); 
+
+        // Display available room types
+        System.out.println("Select Room Type:");
+        for (int i = 0; i < roomTypes.size(); i++) {
+            RoomType roomType = roomTypes.get(i);
+            System.out.println((i + 1) + ": " + roomType.getName());
+        }
+        int roomTypeChoice = sc.nextInt();
+        RoomType selectedRoomType = roomTypes.get(roomTypeChoice - 1); // Get selected RoomType
+
+        System.out.println("Select Room Status:");
+        for (RoomStatusEnum status : RoomStatusEnum.values()) {
+            System.out.println((status.ordinal() + 1) + ": " + status);
+        }
+        int statusChoice = sc.nextInt();
+        RoomStatusEnum selectedRoomStatus = RoomStatusEnum.values()[statusChoice - 1]; // Get selected RoomStatusEnum
+
+
+        try {
+            roomSessionBeanRemote.createRoom(roomNumber, selectedRoomType, selectedRoomStatus);
+            System.out.println("New room created successfully!\n");
+        } catch (Exception ex) {
+            System.out.println("An error occurred while creating the room: " + ex.getMessage() + "\n");
+        }
+        
     }
 
     private void doUpdateRoom() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        Scanner sc = new Scanner(System.in);
+        System.out.println("*** Hotel Reservation System :: Update Room ***\n");
+
+        // Retrieve all rooms 
+        List<Room> rooms = roomSessionBeanRemote.retrieveAllRooms();
+
+        // Display available rooms
+        System.out.println("Select Room to Update:");
+        for (int i = 0; i < rooms.size(); i++) {
+            Room room = rooms.get(i);
+            System.out.println((i + 1) + ": Room " + room.getRoomNumber() + " - Type: " + room.getRoomType().getName() + ", Status: " + room.getRoomStatus());
+        }
+        int roomChoice = sc.nextInt();
+        Room selectedRoom = rooms.get(roomChoice - 1); // Get selected room
+
+        // Get the new room number
+        sc.nextLine(); // consume newline
+        System.out.print("Enter New Room Number (Leave blank to keep current)> ");
+        String newRoomNumber = sc.nextLine().trim();
+        if (!newRoomNumber.isEmpty()) {
+            selectedRoom.setRoomNumber(newRoomNumber);
+        }
+
+        // Retrieve all room types from the database
+        List<RoomType> roomTypes = roomTypeSessionBeanRemote.viewAllRoomTypes();
+        System.out.println("Select New Room Type (Leave blank to keep current):");
+        for (int i = 0; i < roomTypes.size(); i++) {
+            RoomType roomType = roomTypes.get(i);
+            System.out.println((i + 1) + ": " + roomType.getName());
+        }
+        int roomTypeChoice = sc.nextInt();
+        if (roomTypeChoice != 0) {
+            RoomType newRoomType = roomTypes.get(roomTypeChoice - 1);
+            selectedRoom.setRoomType(newRoomType);
+        }
+
+        // Display available room status options
+        System.out.println("Select New Room Status (Leave blank to keep current):");
+        for (RoomStatusEnum status : RoomStatusEnum.values()) {
+            System.out.println((status.ordinal() + 1) + ": " + status);
+        }
+        int statusChoice = sc.nextInt();
+        if (statusChoice != 0) {
+            RoomStatusEnum newStatus = RoomStatusEnum.values()[statusChoice - 1];
+            selectedRoom.setRoomStatus(newStatus);
+        }
+
+        // Save the updated room
+        try {
+            roomSessionBeanRemote.updateRoom(selectedRoom);
+            System.out.println("Room updated successfully!\n");
+        } catch (Exception ex) {
+            System.out.println("An error occurred while updating the room: " + ex.getMessage() + "\n");
+        }
+        
     }
 
     private void doDeleteRoom() {

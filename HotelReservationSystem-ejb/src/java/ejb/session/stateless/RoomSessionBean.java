@@ -31,6 +31,7 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
     }
 
     @Override
+    /*
     public void updateRoom(Long roomId, RoomType roomType, RoomStatusEnum roomStatus) throws RoomNotFoundException {
         Room room = em.find(Room.class, roomId);
         if (room != null) {
@@ -40,7 +41,24 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
         } else {
             throw new RoomNotFoundException("Room ID " + roomId + " not found.");
         }
+    }*/
+    public void updateRoom(Room updatedRoom) throws RoomNotFoundException {
+    // Find the room by ID
+    Room room = em.find(Room.class, updatedRoom.getRoomId());  // Assuming Room has a getter for roomId
+    if (room != null) {
+        // Update the room attributes based on the provided updatedRoom
+        room.setRoomNumber(updatedRoom.getRoomNumber());
+        room.setRoomType(updatedRoom.getRoomType());  // Assuming RoomType has already been set in the updatedRoom
+        room.setRoomStatus(updatedRoom.getRoomStatus());  // Assuming RoomStatusEnum has been set in the updatedRoom
+        // Any other fields that you need to update should also be set here
+        em.merge(room);  // Merge the updated room back into the database
+    } else {
+        // If the room is not found, throw an exception
+        throw new RoomNotFoundException("Room ID " + updatedRoom.getRoomId() + " not found.");
     }
+}
+
+    
 
     @Override
     public void deleteRoom(Long roomId) throws RoomNotFoundException {
