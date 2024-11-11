@@ -355,7 +355,7 @@ public class HotelOperationModule {
            }
         }
 
-
+        newRoomRate.setIsDisabled(false);
         Long newRoomRateId = roomRateSessionBeanRemote.createNewRoomRate(newRoomRate);
         System.out.println("New room type created successfully!: " + newRoomRateId + "\n");
     }

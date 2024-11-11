@@ -38,13 +38,13 @@ public class DataInitialisationSessionBean {
               .getSingleResult();
         } catch (NoResultException ex) {
             // If admin doesn't exist, create one
-            Employee admin = new Employee("SystemAdmin1", "password123", RoleEnum.OperationManager, "admin@hotel.com");
+            Employee admin = new Employee("sysadmin", "password", RoleEnum.SystemAdministrator, "admin@hotel.com");
             em.persist(admin);
-            admin = new Employee("SystemAdmin2", "password123", RoleEnum.OperationManager, "admin@hotel.com");
+            admin = new Employee("opmanager", "password", RoleEnum.OperationManager, "admin@hotel.com");
             em.persist(admin);
-            admin = new Employee("SystemAdmin3", "password123", RoleEnum.OperationManager, "admin@hotel.com");
+            admin = new Employee("salesmanager", "password", RoleEnum.SalesManager, "admin@hotel.com");
             em.persist(admin);
-            admin = new Employee("SystemAdmin4", "password123", RoleEnum.OperationManager, "admin@hotel.com");
+            admin = new Employee("guestrelo", "password", RoleEnum.GuestRelationOfficer, "admin@hotel.com");
             em.persist(admin);
         }
     }
