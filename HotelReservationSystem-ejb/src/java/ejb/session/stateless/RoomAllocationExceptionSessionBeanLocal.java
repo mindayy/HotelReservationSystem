@@ -8,12 +8,13 @@ import java.util.List;
 import javax.ejb.Local;
 import entity.ReserveRoom;
 
+
 /**
  *
  * @author kaixin
  */
 @Local
-public interface ExceptionSessionBeanLocal {
+public interface RoomAllocationExceptionSessionBeanLocal {
     
     public void createRoomAllocationException(ReserveRoom reserveRoom, String exceptionType, String message);
     

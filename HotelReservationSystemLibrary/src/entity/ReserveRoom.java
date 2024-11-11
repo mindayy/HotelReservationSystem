@@ -52,7 +52,7 @@ public class ReserveRoom implements Serializable {
     private boolean roomAllocated = false;  // To track whether the room has been allocated
 
     @OneToMany(mappedBy = "reserveRoom", cascade = {}, fetch = FetchType.LAZY)
-    private List<Exception> exceptions;  // List of exceptions for this reservation
+    private List<RoomAllocationException> exceptions;  // List of exceptions for this reservation
 
     public ReserveRoom() {
     }
@@ -117,12 +117,12 @@ public class ReserveRoom implements Serializable {
     }
 
     
-    public List<Exception> getExceptions() {
+    public List<RoomAllocationException> getExceptions() {
         return exceptions;
     }
     
 
-    public void setExceptions(List<Exception> exceptions) {
+    public void setExceptions(List<RoomAllocationException> exceptions) {
         this.exceptions = exceptions;
     }
 

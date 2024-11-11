@@ -22,7 +22,7 @@ import javax.persistence.ManyToOne;
  * @author kaixin
  */
 @Entity
-public class Exception implements Serializable {
+public class RoomAllocationException implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -30,7 +30,7 @@ public class Exception implements Serializable {
     private Long exceptionId;
     
     @Column(nullable = false)
-    private String message;  // Exception message
+    private String message;  // RoomAllocationException message
 
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
@@ -39,10 +39,10 @@ public class Exception implements Serializable {
     @Column(nullable = false)
     private String exceptionType;  // Type of exception (upgrade/no room)
 
-    public Exception() {
+    public RoomAllocationException() {
     }
 
-    public Exception(String message, ReserveRoom reserveRoom, String exceptionType) {
+    public RoomAllocationException(String message, ReserveRoom reserveRoom, String exceptionType) {
         this.message = message;
         this.reserveRoom = reserveRoom;
         this.exceptionType = exceptionType;
@@ -96,10 +96,10 @@ public class Exception implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the exceptionId fields are not set
-        if (!(object instanceof Exception)) {
+        if (!(object instanceof RoomAllocationException)) {
             return false;
         }
-        Exception other = (Exception) object;
+        RoomAllocationException other = (RoomAllocationException) object;
         if ((this.exceptionId == null && other.exceptionId != null) || (this.exceptionId != null && !this.exceptionId.equals(other.exceptionId))) {
             return false;
         }

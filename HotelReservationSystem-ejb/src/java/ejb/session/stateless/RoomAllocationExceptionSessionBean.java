@@ -4,32 +4,32 @@
  */
 package ejb.session.stateless;
 
+import entity.ReserveRoom;
+import entity.RoomAllocationException;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import entity.ReserveRoom;
 
-/**
- *
- * @author kaixin
- */
+
 @Stateless
-public class ExceptionSessionBean implements ExceptionSessionBeanRemote, ExceptionSessionBeanLocal {
+public class RoomAllocationExceptionSessionBean implements RoomAllocationExceptionSessionBeanRemote, RoomAllocationExceptionSessionBeanLocal {
 
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
     private EntityManager em;
 
+    // Create a new RoomAllocationException
     @Override
     public void createRoomAllocationException(ReserveRoom reserveRoom, String exceptionType, String message) {
-        // Exception exception = new Exception(message, reserveRoom, exceptionType);
-        // em.persist(exception);
+        RoomAllocationException exception = new RoomAllocationException(message, reserveRoom, exceptionType);
+        em.persist(exception);
     }
 
+    // Retrieve all Room Allocation Exceptions
     @Override
-    public List<Exception> retrieveRoomAllocationExceptions() {
-        Query query = em.createQuery("SELECT e FROM Exception e WHERE e.exceptionType IN ('UPGRADE_ROOM', 'NO_ROOM_AVAILABLE')");
+    public List<RoomAllocationException> retrieveRoomAllocationExceptions() {
+        Query query = em.createQuery("SELECT e FROM RoomAllocationException e WHERE e.exceptionType IN ('UPGRADE_ROOM', 'NO_ROOM_AVAILABLE')");
         return query.getResultList();
     }
 }

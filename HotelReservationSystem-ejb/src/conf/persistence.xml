@@ -9,9 +9,9 @@
     <class>entity.RoomType</class>
     <class>entity.Employee</class>
     <class>entity.ReserveRoom</class>
-    <class>entity.Exception</class>
     <class>entity.Room</class>
     <class>entity.Partner</class>
+    <class>entity.RoomAllocationException</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.schema-generation.database.action" value="create"/>
