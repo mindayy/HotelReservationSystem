@@ -8,6 +8,7 @@ import java.util.List;
 import javax.ejb.Remote;
 import entity.ReservationRoom;
 import entity.RoomAllocationException;
+import enums.RoomAllocationExceptionTypeEnum;
 
 /**
  *
@@ -16,9 +17,13 @@ import entity.RoomAllocationException;
 @Remote
 public interface RoomAllocationExceptionSessionBeanRemote {
     
-    public void createRoomAllocationException(ReservationRoom reservationRoom, String exceptionType, String message);
+    public void createRoomAllocationException(ReservationRoom reservationRoom, RoomAllocationExceptionTypeEnum exceptionType, String message);
     
-    public List<RoomAllocationException> retrieveRoomAllocationExceptions();
+    public RoomAllocationException retrieveRoomAllocationExceptionById(Long exceptionId);
+    
+    public List<RoomAllocationException> retrieveAllRoomAllocationExceptions();
+    
+    public List<String> generateRoomAllocationExceptionReport();
     
     
 }
