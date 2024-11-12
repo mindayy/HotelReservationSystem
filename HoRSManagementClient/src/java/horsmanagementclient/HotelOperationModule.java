@@ -292,7 +292,7 @@ public class HotelOperationModule {
         System.out.println("*** Hotel Reservation System :: Hotel Operation :: View All Room Types ***\n");
         
         List<RoomType> roomTypes = roomTypeSessionBeanRemote.viewAllRoomTypes();
-        System.out.printf("%-12s %-40s %-30s %-10s %-12s %-10s %-30s\n", "Room Type Id", "Name",
+        System.out.printf("%-12s %-20s %-30s %-10s %-12s %-10s %-30s\n", "Room Type Id", "Name",
                     "Description", "Size", "Bed", "Capacity", "Amenities");
 
         for(RoomType roomType:roomTypes)
@@ -312,15 +312,19 @@ public class HotelOperationModule {
         System.out.println("*** Hotel Reservation System :: Hotel Operation :: Create New Room Rate ***\n");
         System.out.print("Enter Room Rate Name> ");
         newRoomRate.setRoomRateName(scanner.nextLine().trim());
+        
+        List<RoomType> roomTypes = roomTypeSessionBeanRemote.viewAllRoomTypes();
+        System.out.printf("%-12s %-20s %-30s %-10s %-12s %-10s %-30s\n", "Room Type Id", "Name",
+                    "Description", "Size", "Bed", "Capacity", "Amenities");
+        for (RoomType roomType:roomTypes)
+        {
+            System.out.printf("%-12s %-20s %-30s %-10s %-12s %-10s %-30s\n", roomType.getRoomTypeId(), roomType.getName(),
+                    roomType.getDescription(), roomType.getSize(), roomType.getBed(), roomType.getCapacity(), roomType.getAmenities());
+        }
+        
         System.out.print("Enter Room Type Id> ");
         Long roomTypeId = Long.parseLong(scanner.nextLine().trim());
-        RoomType roomType;
-        try {
-            roomType = roomTypeSessionBeanRemote.retrieveRoomTypeById(roomTypeId);
-            newRoomRate.setRoomType(roomType);
-        } catch (RoomTypeNotFoundException ex) {
-            System.out.println("An error has occurred while retrieving room type: " + ex.getMessage() + "\n");
-        }
+
         System.out.print("Enter Room Rate Per Night> ");
         String rateInput = scanner.nextLine().trim();
         BigDecimal ratePerNight = new BigDecimal(rateInput);
@@ -358,7 +362,7 @@ public class HotelOperationModule {
         }
 
         newRoomRate.setIsDisabled(false);
-        Long newRoomRateId = roomRateSessionBeanRemote.createNewRoomRate(newRoomRate);
+        Long newRoomRateId = roomRateSessionBeanRemote.createNewRoomRate(newRoomRate, roomTypeId);
         System.out.println("New room rate created successfully!: " + newRoomRateId + "\n");
     }
 
@@ -372,18 +376,19 @@ public class HotelOperationModule {
 
         try {
             RoomRate roomRate = roomRateSessionBeanRemote.retrieveRoomRateById(roomRateId);
+            Long roomTypeId = roomRateSessionBeanRemote.getRoomTypeIdForRoomRate(roomRateId);
             if (roomRate.getRateType() == RateTypeEnum.PEAK || roomRate.getRateType() == RateTypeEnum.PROMOTION) {
                 System.out.printf("%-12s %-40s %-12s %-12s %-12s %-12s %-12s \n", "Room Rate Id", "Name",
                         "Rate Type", "Rate Per Night", "Valid From", "Valid To", "Room Type Id");
                 System.out.printf("%-12s %-40s %-12s %-12s %-12s  %-12s %-12s \n", roomRate.getRoomRateId(), roomRate.getRoomRateName(),
-                        roomRate.getRateType(), roomRate.getRatePerNight(), roomRate.getValidFrom(), roomRate.getValidTo(), roomRate.getRoomType().getRoomTypeId());
+                        roomRate.getRateType(), roomRate.getRatePerNight(), roomRate.getValidFrom(), roomRate.getValidTo(), roomTypeId);
             }
             else
             {
                 System.out.printf("%-12s %-40s %-12s %-12s %-12s \n", "Room Rate Id", "Name",
                     "Rate Type", "Rate Per Night", "Room Type Id");
                 System.out.printf("%-12s %-40s %-12s %-12s %-12s \n", roomRate.getRoomRateId(), roomRate.getRoomRateName(),
-                    roomRate.getRateType(), roomRate.getRatePerNight(), roomRate.getRoomType());
+                    roomRate.getRateType(), roomRate.getRatePerNight(), roomTypeId);
             }
             
             System.out.println("------------------------");

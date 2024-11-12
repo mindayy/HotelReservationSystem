@@ -28,10 +28,20 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
     private EntityManager em;
 
     @Override
-    public Long createNewRoomRate(RoomRate roomRate) {
+    public Long createNewRoomRate(RoomRate roomRate, Long roomTypeId) {
+        
+        // do association
+        RoomType roomType = em.find(RoomType.class, roomTypeId);
+        if (roomType == null) {
+            throw new IllegalArgumentException("RoomType with ID " + roomTypeId + " does not exist.");
+        }
+        roomRate.setRoomType(roomType);
+        roomType.getRoomRates().add(roomRate);
+        
+        // persist room rate
 	em.persist(roomRate);
         em.flush();
- 
+
         return roomRate.getRoomRateId();
     }
     
@@ -76,6 +86,20 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
         //logic to be inserted
         return false;
 
+    }
+    
+    @Override
+    public Long getRoomTypeIdForRoomRate(Long roomRateId) throws RoomRateNotFoundException {
+        try {
+            RoomRate roomRate = em.find(RoomRate.class, roomRateId);
+            if (roomRate != null && roomRate.getRoomType() != null) {
+                return roomRate.getRoomType().getRoomTypeId();
+            } else {
+                throw new RoomRateNotFoundException("Room rate or associated room type not found!");
+            }
+        } catch (Exception e) {
+            throw new RoomRateNotFoundException("An error occurred while retrieving room type: " + e.getMessage());
+        }
     }
 
     
