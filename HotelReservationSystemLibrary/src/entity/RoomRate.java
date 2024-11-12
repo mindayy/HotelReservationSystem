@@ -52,7 +52,7 @@ public class RoomRate implements Serializable {
     private Boolean isDisabled;
     
     // relationships
-    @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, cascade = {}, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false)
     private RoomType roomType;
     
