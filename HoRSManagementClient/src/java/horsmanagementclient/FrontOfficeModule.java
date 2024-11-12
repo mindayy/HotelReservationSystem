@@ -32,7 +32,7 @@ public class FrontOfficeModule {
 
     void menuFrontOffice() throws InvalidAccessRightException {
         if (currentEmployee.getRole() != RoleEnum.GuestRelationOfficer) {
-            throw new InvalidAccessRightException("You do not have the rights to access the Hotel Operation Module.");
+            throw new InvalidAccessRightException("You do not have the rights to access the Front Office Module.");
         }
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;

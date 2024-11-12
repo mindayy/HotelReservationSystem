@@ -292,7 +292,7 @@ public class HotelOperationModule {
         System.out.println("*** Hotel Reservation System :: Hotel Operation :: View All Room Types ***\n");
         
         List<RoomType> roomTypes = roomTypeSessionBeanRemote.viewAllRoomTypes();
-        System.out.printf("%-12s %-20s %-30s %-10s %-12s %-10s %-30s\n", "Room Type Id", "Name",
+        System.out.printf("%-12s %-40s %-30s %-10s %-12s %-10s %-30s\n", "Room Type Id", "Name",
                     "Description", "Size", "Bed", "Capacity", "Amenities");
 
         for(RoomType roomType:roomTypes)
@@ -359,7 +359,7 @@ public class HotelOperationModule {
 
         newRoomRate.setIsDisabled(false);
         Long newRoomRateId = roomRateSessionBeanRemote.createNewRoomRate(newRoomRate);
-        System.out.println("New room type created successfully!: " + newRoomRateId + "\n");
+        System.out.println("New room rate created successfully!: " + newRoomRateId + "\n");
     }
 
     private void doViewRoomRateDetails() {
@@ -373,16 +373,16 @@ public class HotelOperationModule {
         try {
             RoomRate roomRate = roomRateSessionBeanRemote.retrieveRoomRateById(roomRateId);
             if (roomRate.getRateType() == RateTypeEnum.PEAK || roomRate.getRateType() == RateTypeEnum.PROMOTION) {
-                System.out.printf("%-12s %-12s %-12s %-12s %-12s %-12s %-12s \n", "Room Rate Id", "Name",
+                System.out.printf("%-12s %-40s %-12s %-12s %-12s %-12s %-12s \n", "Room Rate Id", "Name",
                         "Rate Type", "Rate Per Night", "Valid From", "Valid To", "Room Type Id");
-                System.out.printf("%-12s %-12s %-12s %-12s %-12s  %-12s %-12s \n", roomRate.getRoomRateId(), roomRate.getRoomRateName(),
-                        roomRate.getRateType(), roomRate.getRatePerNight(), roomRate.getValidFrom(), roomRate.getValidTo(), roomRate.getRoomType());
+                System.out.printf("%-12s %-40s %-12s %-12s %-12s  %-12s %-12s \n", roomRate.getRoomRateId(), roomRate.getRoomRateName(),
+                        roomRate.getRateType(), roomRate.getRatePerNight(), roomRate.getValidFrom(), roomRate.getValidTo(), roomRate.getRoomType().getRoomTypeId());
             }
             else
             {
-                System.out.printf("%-12s %-12s %-12s %-12s %-12s \n", "Room Rate Id", "Name",
+                System.out.printf("%-12s %-40s %-12s %-12s %-12s \n", "Room Rate Id", "Name",
                     "Rate Type", "Rate Per Night", "Room Type Id");
-                System.out.printf("%-12s %-12s %-12s %-12s %-12s \n", roomRate.getRoomRateId(), roomRate.getRoomRateName(),
+                System.out.printf("%-12s %-40s %-12s %-12s %-12s \n", roomRate.getRoomRateId(), roomRate.getRoomRateName(),
                     roomRate.getRateType(), roomRate.getRatePerNight(), roomRate.getRoomType());
             }
             
@@ -414,18 +414,18 @@ public class HotelOperationModule {
         System.out.println("*** Hotel Reservation System :: Hotel Operation :: View All Room Rates ***\n");
         
         List<RoomRate> roomRates = roomRateSessionBeanRemote.viewAllRoomRates();
-        System.out.printf("%-12s %-12s %-12s %-12s %-12s %-12s %-12s \n", "Room Rate Id", "Name",
+        System.out.printf("%-12s %-40s %-12s %-12s %-12s %-12s %-12s \n", "Room Rate Id", "Name",
                         "Rate Type", "Rate Per Night", "Valid From", "Valid To", "Room Type Id");
 
         for(RoomRate roomRate:roomRates)
         {
             if (roomRate.getRateType() == RateTypeEnum.PEAK || roomRate.getRateType() == RateTypeEnum.PROMOTION) {
-                System.out.printf("%-12s %-12s %-12s %-12s %-12s  %-12s %-12s \n", roomRate.getRoomRateId(), roomRate.getRoomRateName(),
+                System.out.printf("%-12s %-40s %-12s %-12s %-12s  %-12s %-12s \n", roomRate.getRoomRateId(), roomRate.getRoomRateName(),
                         roomRate.getRateType(), roomRate.getRatePerNight(), roomRate.getValidFrom(), roomRate.getValidTo(), roomRate.getRoomType());
             }
             else 
             {
-                System.out.printf("%-12s %-12s %-12s %-12s %-12s  %-12s %-12s \n", roomRate.getRoomRateId(), roomRate.getRoomRateName(),
+                System.out.printf("%-12s %-40s %-12s %-12s %-12s  %-12s %-12s \n", roomRate.getRoomRateId(), roomRate.getRoomRateName(),
                         roomRate.getRateType(), roomRate.getRatePerNight(), "N/A", "N/A", roomRate.getRoomType());
             }
         }

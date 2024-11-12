@@ -26,9 +26,6 @@ public class Partner implements Serializable {
 
     @Column(nullable = false, length = 64)
     private String password; 
-
-    @Column(nullable = false, length = 100)
-    private String name;
     
     @Column(nullable = false, length = 100, unique = true)
     private String email;
@@ -78,16 +75,6 @@ public class Partner implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-    
-    public void setName(String name) {
-        this.name = name;
     }
 
 

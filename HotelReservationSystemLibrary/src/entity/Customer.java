@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package entity;
+/*package entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +12,7 @@ import javax.persistence.Entity;
  *
  * @author min
  */
+/*
 @Entity
 public class Customer extends Guest {
 
@@ -35,6 +36,7 @@ public class Customer extends Guest {
     /**
      * @return the email
      */
+/*
     public String getEmail() {
         return email;
     }
@@ -42,6 +44,7 @@ public class Customer extends Guest {
     /**
      * @param email the email to set
      */
+/*
     public void setEmail(String email) {
         this.email = email;
     }
@@ -49,6 +52,7 @@ public class Customer extends Guest {
     /**
      * @return the phoneNum
      */
+/*
     public int getPhoneNum() {
         return phoneNum;
     }
@@ -56,6 +60,7 @@ public class Customer extends Guest {
     /**
      * @param phoneNum the phoneNum to set
      */
+/*
     public void setPhoneNum(int phoneNum) {
         this.phoneNum = phoneNum;
     }
@@ -63,6 +68,7 @@ public class Customer extends Guest {
     /**
      * @return the passportNum
      */
+/*
     public String getPassportNum() {
         return passportNum;
     }
@@ -70,6 +76,7 @@ public class Customer extends Guest {
     /**
      * @param passportNum the passportNum to set
      */
+/*
     public void setPassportNum(String passportNum) {
         this.passportNum = passportNum;
     }
@@ -77,3 +84,4 @@ public class Customer extends Guest {
 
 
 }
+*/

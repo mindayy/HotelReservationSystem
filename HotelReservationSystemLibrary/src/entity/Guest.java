@@ -40,6 +40,10 @@ public class Guest implements Serializable {
     @OneToMany(mappedBy = "guest", cascade = {}, fetch = FetchType.LAZY)
     private List<Reservation> reservations;
 
+    public Guest() {
+    }
+    
+    
     public Guest(List<Reservation> reservations) {
         this.reservations = reservations;
     }

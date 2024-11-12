@@ -10,7 +10,7 @@ import ejb.session.stateless.ReservationSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
-import entity.Customer;
+// import entity.Customer;
 import java.util.Scanner;
 import util.exception.InvalidLoginCredentialException;
 
@@ -26,7 +26,7 @@ class MainApp {
     private RoomSessionBeanRemote roomSessionBeanRemote;
     private PartnerSessionBeanRemote partnerSessionBeanRemote;
     
-    private Customer currentCustomer;
+    // private Customer currentCustomer;
 
     public MainApp() {
     }
