@@ -7,8 +7,11 @@ package ejb.session.stateless;
 import entity.Guest;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import util.exception.GuestNotFoundException;
+import util.exception.InvalidLoginCredentialException;
 
 /**
  *
@@ -35,9 +38,33 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
         if (guest != null) {
             return guest;
         } else {
-            throw new GuestNotFoundException("Employee ID " + guestId + " does not exist.");
+            throw new GuestNotFoundException("Guest ID " + guestId + " does not exist.");
         }
     }
+    
+    @Override
+    public Guest guestLogin(String username, String password) throws InvalidLoginCredentialException {
+        Query query = em.createQuery("SELECT e FROM Guest g WHERE g.username = :inUsername");
+        query.setParameter("inUsername", username);
+
+        try {
+            Guest guest = (Guest) query.getSingleResult();
+            if (guest.isLoggedIn()) {
+                System.out.println("Guest is already logged in.");
+            }
+            if (guest.getPassword().equals(password)) {
+                guest.setIsLoggedIn(true); 
+                em.merge(guest);
+                return guest;
+            } else {
+                throw new InvalidLoginCredentialException("Invalid password!");
+            }
+        } catch (NoResultException ex) {
+            throw new InvalidLoginCredentialException("Username does not exist!");
+        }
+    }
+    
+    
 
 
 

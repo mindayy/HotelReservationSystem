@@ -622,11 +622,49 @@ public class HotelOperationModule {
     }
 
     private void doDeleteRoom() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Scanner sc = new Scanner(System.in);
+        System.out.println("*** HoRS Management System :: Delete Room ***\n");
+
+        // Retrieve all rooms (assuming a method exists to fetch all rooms)
+        List<Room> rooms = roomSessionBeanRemote.retrieveAllRooms();
+
+        // Display available rooms
+        System.out.println("Select Room to Delete:");
+        for (int i = 0; i < rooms.size(); i++) {
+            Room room = rooms.get(i);
+            System.out.println((i + 1) + ": Room " + room.getRoomNumber() + " - Type: " + room.getRoomType().getName() + ", Status: " + room.getRoomStatus());
+        }
+        int roomChoice = sc.nextInt();
+        Room selectedRoom = rooms.get(roomChoice - 1); // Get selected room
+
+        // Confirm deletion
+        System.out.print("Are you sure you want to delete Room " + selectedRoom.getRoomNumber() + "? (y/n): ");
+        String confirmation = sc.next().trim();
+        if (confirmation.equalsIgnoreCase("y")) {
+            try {
+                roomSessionBeanRemote.deleteRoom(selectedRoom.getRoomId());
+                System.out.println("Room deleted successfully!\n");
+            } catch (Exception ex) {
+                System.out.println("An error occurred while deleting the room: " + ex.getMessage() + "\n");
+            }
+        } else {
+            System.out.println("Room deletion cancelled.\n");
+        }
     }
 
     private void doViewAllRooms() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("*** HoRS Management System :: View All Rooms ***\n");
+
+        List<Room> rooms = roomSessionBeanRemote.retrieveAllRooms();
+
+        if (rooms.isEmpty()) {
+            System.out.println("No rooms found in the system.\n");
+        } else {
+            System.out.println("List of All Rooms:");
+            for (Room room : rooms) {
+                System.out.println("Room " + room.getRoomNumber() + " - Type: " + room.getRoomType().getName() + ", Status: " + room.getRoomStatus());
+            }
+        }
     }
 
     private void doViewAllRoomAllocationExceptionReport() {
