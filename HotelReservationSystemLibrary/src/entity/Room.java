@@ -47,7 +47,7 @@ public class Room implements Serializable {
     private boolean isDeleted = false;  // Soft delete indicator but still need to kiv 
 
     @OneToMany(mappedBy = "room", cascade = {}, fetch = FetchType.LAZY)
-    private List<ReserveRoom> reserveRoom;
+    private List<ReservationRoom> reservationRoom;
     
     
     public Room() {
@@ -109,18 +109,14 @@ public class Room implements Serializable {
     }
 
     
-    /**
-     * @return the reserveRoom
-     */
-    public List<ReserveRoom> getReserveRoom() {
-        return reserveRoom;
+
+    public List<ReservationRoom> getReserveRoom() {
+        return reservationRoom;
     }
 
-    /**
-     * @param reserveRoom the reserveRoom to set
-     */
-    public void setReserveRoom(List<ReserveRoom> reserveRoom) {
-        this.reserveRoom = reserveRoom;
+
+    public void setReserveRoom(List<ReservationRoom> reserveRoom) {
+        this.reservationRoom = reserveRoom;
     }
 
     

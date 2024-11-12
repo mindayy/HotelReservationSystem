@@ -58,7 +58,7 @@ public class Reservation implements Serializable {
     private Partner partner;
     
     @OneToMany(mappedBy = "reservation", cascade = {}, fetch = FetchType.LAZY)
-    private List<ReserveRoom> reserveRooms;
+    private List<ReservationRoom> reservationRooms;
     
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
@@ -69,7 +69,7 @@ public class Reservation implements Serializable {
     private List<RoomRate> roomRates;
 
     public Reservation() {
-        reserveRooms = new ArrayList<>();
+        reservationRooms = new ArrayList<>();
         roomRates = new ArrayList<>();
     }
     
@@ -90,71 +90,51 @@ public class Reservation implements Serializable {
     }
     
     
-    /**
-     * @return the checkInDate
-     */
     public Date getCheckInDate() {
         return checkInDate;
     }
 
-    /**
-     * @param checkInDate the checkInDate to set
-     */
+
     public void setCheckInDate(Date checkInDate) {
         this.checkInDate = checkInDate;
     }
 
-    /**
-     * @return the checkOutDate
-     */
+
     public Date getCheckOutDate() {
         return checkOutDate;
     }
 
-    /**
-     * @param checkOutDate the checkOutDate to set
-     */
+
     public void setCheckOutDate(Date checkOutDate) {
         this.checkOutDate = checkOutDate;
     }
 
-    /**
-     * @return the reservationAmt
-     */
+  
     public BigDecimal getReservationAmt() {
         return reservationAmt;
     }
 
-    /**
-     * @param reservationAmt the reservationAmt to set
-     */
+ 
     public void setReservationAmt(BigDecimal reservationAmt) {
         this.reservationAmt = reservationAmt;
     }
     
-    /**
-     * @return the roomRates
-     */
+  
     public List<RoomRate> getRoomRates() {
         return roomRates;
     }
 
-    /**
-     * @param roomRates the roomRates to set
-     */
+  
     public void setRoomRates(List<RoomRate> roomRates) {
         this.roomRates = roomRates;
     }
-        /**
-     * @return the reservationStatus
-     */
+ 
+    
     public Enum getReservationStatus() {
         return reservationStatus;
     }
 
-    /**
-     * @param reservationStatus the reservationStatus to set
-     */
+
     public void setReservationStatus(ReservationStatus reservationStatus) {
         this.reservationStatus = reservationStatus;
     }
@@ -184,58 +164,42 @@ public class Reservation implements Serializable {
         return "entity.Reservation[ id=" + reservationId + " ]";
     }
 
-    /**
-     * @return the guest
-     */
+
     public Guest getGuest() {
         return guest;
     }
 
-    /**
-     * @param guest the guest to set
-     */
+
     public void setGuest(Guest guest) {
         this.guest = guest;
     }
 
-    /**
-     * @return the partner
-     */
+
     public Partner getPartner() {
         return partner;
     }
 
-    /**
-     * @param partner the partner to set
-     */
+    
     public void setPartner(Partner partner) {
         this.partner = partner;
     }
 
-    /**
-     * @return the reserveRooms
-     */
-    public List<ReserveRoom> getReserveRooms() {
-        return reserveRooms;
+
+    public List<ReservationRoom> getReserveRooms() {
+        return reservationRooms;
     }
 
-    /**
-     * @param reserveRooms the reserveRooms to set
-     */
-    public void setReserveRooms(List<ReserveRoom> reserveRooms) {
-        this.reserveRooms = reserveRooms;
+
+    public void setReserveRooms(List<ReservationRoom> reservationRooms) {
+        this.reservationRooms = reservationRooms;
     }
 
-    /**
-     * @return the roomType
-     */
+
     public RoomType getRoomType() {
         return roomType;
     }
 
-    /**
-     * @param roomType the roomType to set
-     */
+
     public void setRoomType(RoomType roomType) {
         this.roomType = roomType;
     }

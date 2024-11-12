@@ -19,18 +19,15 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-/**
- *
- * @author kaixin
- */
+
 @Entity
-public class ReserveRoom implements Serializable {
+public class ReservationRoom implements Serializable {
 
     
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reservedRoomId;
+    private Long reservationRoomId;
     
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
@@ -51,13 +48,13 @@ public class ReserveRoom implements Serializable {
     @Column(nullable = false)
     private boolean roomAllocated = false;  // To track whether the room has been allocated
 
-    @OneToMany(mappedBy = "reserveRoom", cascade = {}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "reservationRoom", cascade = {}, fetch = FetchType.LAZY)
     private List<RoomAllocationException> exceptions;  // List of exceptions for this reservation
 
-    public ReserveRoom() {
+    public ReservationRoom() {
     }
 
-    public ReserveRoom(Room room, Reservation reservation, Date reservedFrom, Date reservedTo) {
+    public ReservationRoom(Room room, Reservation reservation, Date reservedFrom, Date reservedTo) {
         this.room = room;
         this.reservation = reservation;
         this.reservedFrom = reservedFrom;
@@ -66,12 +63,12 @@ public class ReserveRoom implements Serializable {
     }
     
 
-    public Long getReservedRoomId() {
-        return reservedRoomId;
+    public Long getReservationRoomId() {
+        return reservationRoomId;
     }
 
-    public void setReservedRoomId(Long reservedRoomId) {
-        this.reservedRoomId = reservedRoomId;
+    public void setReservationRoomId(Long reservationRoomId) {
+        this.reservationRoomId = reservationRoomId;
     }
     
     public Room getRoom() {
@@ -129,18 +126,18 @@ public class ReserveRoom implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (reservedRoomId != null ? reservedRoomId.hashCode() : 0);
+        hash += (reservationRoomId != null ? reservationRoomId.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the reservedRoomId fields are not set
-        if (!(object instanceof ReserveRoom)) {
+        // TODO: Warning - this method won't work in the case the reservationRoomId fields are not set
+        if (!(object instanceof ReservationRoom)) {
             return false;
         }
-        ReserveRoom other = (ReserveRoom) object;
-        if ((this.reservedRoomId == null && other.reservedRoomId != null) || (this.reservedRoomId != null && !this.reservedRoomId.equals(other.reservedRoomId))) {
+        ReservationRoom other = (ReservationRoom) object;
+        if ((this.reservationRoomId == null && other.reservationRoomId != null) || (this.reservationRoomId != null && !this.reservationRoomId.equals(other.reservationRoomId))) {
             return false;
         }
         return true;
@@ -148,7 +145,7 @@ public class ReserveRoom implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.reserveRoom[ id=" + reservedRoomId + " ]";
+        return "entity.reserveRoom[ id=" + reservationRoomId + " ]";
     }
     
 }

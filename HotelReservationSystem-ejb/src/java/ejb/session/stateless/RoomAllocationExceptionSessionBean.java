@@ -4,7 +4,7 @@
  */
 package ejb.session.stateless;
 
-import entity.ReserveRoom;
+import entity.ReservationRoom;
 import entity.RoomAllocationException;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -21,8 +21,8 @@ public class RoomAllocationExceptionSessionBean implements RoomAllocationExcepti
 
     // Create a new RoomAllocationException
     @Override
-    public void createRoomAllocationException(ReserveRoom reserveRoom, String exceptionType, String message) {
-        RoomAllocationException exception = new RoomAllocationException(message, reserveRoom, exceptionType);
+    public void createRoomAllocationException(ReservationRoom reservationRoom, String exceptionType, String message) {
+        RoomAllocationException exception = new RoomAllocationException(message, reservationRoom, exceptionType);
         em.persist(exception);
     }
 

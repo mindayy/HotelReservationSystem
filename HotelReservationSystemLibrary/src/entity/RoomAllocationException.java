@@ -34,7 +34,7 @@ public class RoomAllocationException implements Serializable {
 
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-    private ReserveRoom reserveRoom;  // Relationship with ReserveRoom entity
+    private ReservationRoom reservationRoom;  // Relationship with ReserveRoom entity
 
     @Column(nullable = false)
     private String exceptionType;  // Type of exception (upgrade/no room)
@@ -42,9 +42,9 @@ public class RoomAllocationException implements Serializable {
     public RoomAllocationException() {
     }
 
-    public RoomAllocationException(String message, ReserveRoom reserveRoom, String exceptionType) {
+    public RoomAllocationException(String message, ReservationRoom reservationRoom, String exceptionType) {
         this.message = message;
-        this.reserveRoom = reserveRoom;
+        this.reservationRoom = reservationRoom;
         this.exceptionType = exceptionType;
     }
   
@@ -67,13 +67,13 @@ public class RoomAllocationException implements Serializable {
     }
 
 
-    public ReserveRoom getReserveRoom() {
-        return reserveRoom;
+    public ReservationRoom getReserveRoom() {
+        return reservationRoom;
     }
 
 
-    public void setReserveRoom(ReserveRoom reserveRoom) {
-        this.reserveRoom = reserveRoom;
+    public void setReserveRoom(ReservationRoom reservationRoom) {
+        this.reservationRoom = reservationRoom;
     }
 
 
