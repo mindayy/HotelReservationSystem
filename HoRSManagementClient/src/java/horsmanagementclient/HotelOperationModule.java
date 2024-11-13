@@ -334,6 +334,7 @@ public class HotelOperationModule {
         {
             System.out.print("Select Room Rate Type (1: Published, 2: Normal, 3: Peak, 4: Promotion)> ");
             Integer rateTypeInt = scanner.nextInt();
+            scanner.nextLine();
             
             if(rateTypeInt >= 1 && rateTypeInt <= 4)
             {
@@ -369,6 +370,9 @@ public class HotelOperationModule {
     private void doViewRoomRateDetails() {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String validFrom = "";
+        String validTo = "";
         
         System.out.println("*** Hotel Reservation System :: Hotel Operation :: View Room Rate Details ***\n");
         System.out.print("Enter Room Rate ID> ");
@@ -378,10 +382,16 @@ public class HotelOperationModule {
             RoomRate roomRate = roomRateSessionBeanRemote.retrieveRoomRateById(roomRateId);
             Long roomTypeId = roomRateSessionBeanRemote.getRoomTypeIdForRoomRate(roomRateId);
             if (roomRate.getRateType() == RateTypeEnum.PEAK || roomRate.getRateType() == RateTypeEnum.PROMOTION) {
-                System.out.printf("%-12s %-40s %-12s %-12s %-12s %-12s %-12s \n", "Room Rate Id", "Name",
+                if (roomRate.getValidFrom() != null) {
+                    validFrom = dateFormat.format(roomRate.getValidFrom());
+                }
+                if (roomRate.getValidTo() != null) {
+                    validTo = dateFormat.format(roomRate.getValidTo());
+                }
+                System.out.printf("%-12s %-50s %-12s %-16s %-12s %-12s %-12s\n", "Room Rate Id", "Name",
                         "Rate Type", "Rate Per Night", "Valid From", "Valid To", "Room Type Id");
-                System.out.printf("%-12s %-40s %-12s %-12s %-12s  %-12s %-12s \n", roomRate.getRoomRateId(), roomRate.getRoomRateName(),
-                        roomRate.getRateType(), roomRate.getRatePerNight(), roomRate.getValidFrom(), roomRate.getValidTo(), roomTypeId);
+                System.out.printf("%-12s %-50s %-12s %-16s %-12s %-12s %-12s\n", roomRate.getRoomRateId(), roomRate.getRoomRateName(),
+                        roomRate.getRateType(), roomRate.getRatePerNight(), validFrom, validTo, roomTypeId);
             }
             else
             {
@@ -415,24 +425,35 @@ public class HotelOperationModule {
 
     private void doViewAllRoomRates() {
         Scanner scanner = new Scanner(System.in);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         
         System.out.println("*** Hotel Reservation System :: Hotel Operation :: View All Room Rates ***\n");
         
         List<RoomRate> roomRates = roomRateSessionBeanRemote.viewAllRoomRates();
-        System.out.printf("%-12s %-40s %-12s %-12s %-12s %-12s %-12s \n", "Room Rate Id", "Name",
+        System.out.printf("%-12s %-50s %-12s %-16s %-12s %-12s %-12s\n", "Room Rate Id", "Name",
                         "Rate Type", "Rate Per Night", "Valid From", "Valid To", "Room Type Id");
 
-        for(RoomRate roomRate:roomRates)
-        {
+        for(RoomRate roomRate : roomRates) {
+            String validFrom = "N/A";
+            String validTo = "N/A";
+
             if (roomRate.getRateType() == RateTypeEnum.PEAK || roomRate.getRateType() == RateTypeEnum.PROMOTION) {
-                System.out.printf("%-12s %-40s %-12s %-12s %-12s  %-12s %-12s \n", roomRate.getRoomRateId(), roomRate.getRoomRateName(),
-                        roomRate.getRateType(), roomRate.getRatePerNight(), roomRate.getValidFrom(), roomRate.getValidTo(), roomRate.getRoomType());
+                if (roomRate.getValidFrom() != null) {
+                    validFrom = dateFormat.format(roomRate.getValidFrom());
+                }
+                if (roomRate.getValidTo() != null) {
+                    validTo = dateFormat.format(roomRate.getValidTo());
+                }
             }
-            else 
-            {
-                System.out.printf("%-12s %-40s %-12s %-12s %-12s  %-12s %-12s \n", roomRate.getRoomRateId(), roomRate.getRoomRateName(),
-                        roomRate.getRateType(), roomRate.getRatePerNight(), "N/A", "N/A", roomRate.getRoomType());
-            }
+
+            System.out.printf("%-12s %-50s %-12s %-16s %-12s %-12s %-12s\n", 
+                              roomRate.getRoomRateId(), 
+                              roomRate.getRoomRateName(),
+                              roomRate.getRateType(),
+                              roomRate.getRatePerNight(), 
+                              validFrom, 
+                              validTo, 
+                              roomRate.getRoomType());
         }
         
         System.out.print("Press any key to continue...> ");
@@ -442,51 +463,52 @@ public class HotelOperationModule {
     private void doUpdateRoomRate(RoomRate roomRate) {
         Scanner scanner = new Scanner(System.in);        
         String input;
+        Long roomTypeId = null;
+        BigDecimal ratePerNight = null;
+        RateTypeEnum rateType = null;
+        String name = null;
+        Date startDate = null;
+        Date endDate = null;
+        
         // name, rate type, rate per night, validfrom, validto, roomtypeid
         System.out.println("*** Hotel Reservation System :: Hotel Operation :: View Room Rate Details :: Update Room Rate ***\n");
         System.out.print("Enter Name (blank if no change)> ");
-        input = scanner.nextLine().trim();
-        if(input.length() > 0)
-        {
-            roomRate.setRoomRateName(input);
-        }
+        name = scanner.nextLine().trim();
+        
                 
         System.out.print("Enter Rate Per Night(blank if no change)> ");
         input = scanner.nextLine().trim();
-        if(input.length() > 0)
-        {
-            BigDecimal ratePerNight = new BigDecimal(input);
-            roomRate.setRatePerNight(ratePerNight);
-        }
+        ratePerNight = new BigDecimal(input);
+
         
         System.out.print("Enter Room Type Id (blank if no change)> ");
         input = scanner.nextLine().trim();
         if(input.length() > 0) {
-            Long roomTypeId = Long.parseLong(scanner.nextLine().trim());
+            roomTypeId = Long.parseLong(input);
             RoomType roomType;
             try {
                 roomType = roomTypeSessionBeanRemote.retrieveRoomTypeById(roomTypeId);
-                roomRate.setRoomType(roomType);
             } catch (RoomTypeNotFoundException ex) {
                 System.out.println("An error has occurred while retrieving room type: " + ex.getMessage() + "\n");
             }
+        } else {
+            roomTypeId = roomRate.getRoomType().getRoomTypeId();
         }
         
-        while(true)
-        {
-            System.out.print("Enter Room Rate Type (1: Published, 2: Normal, 3: Peak, 4: Promotion, blank if no change)> ");
-            Integer rateTypeInt = scanner.nextInt();
-            
-            if(input.length() > 0) 
-            {
-                roomRate.setRateType(RateTypeEnum.values()[rateTypeInt-1]);
-                break;
+
+        System.out.print("Enter Room Rate Type (1: Published, 2: Normal, 3: Peak, 4: Promotion, blank if no change)> ");
+        input = scanner.nextLine().trim();
+        if (input.length() > 0) {
+            try {
+                Integer rateTypeInt = Integer.parseInt(input);
+                roomRate.setRateType(RateTypeEnum.values()[rateTypeInt - 1]);
+            } catch (NumberFormatException ex) {
+                System.out.println("Invalid option, please try again!");
             }
-            else
-            {
-                System.out.println("Invalid option, please try again!\n");
-            }
+        } else {
+            rateType = roomRate.getRateType();
         }
+        
         
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         if (roomRate.getRateType() == RateTypeEnum.PEAK || roomRate.getRateType() == RateTypeEnum.PROMOTION) {
@@ -494,21 +516,20 @@ public class HotelOperationModule {
                System.out.print("Enter Room Rate Start Date (yyyy-MM-dd) (blank if no change)> ");
                String startDateInput = scanner.nextLine().trim();
                if(startDateInput.length() > 0) {
-                    Date startDate = dateFormat.parse(startDateInput); // Convert String to Date
-                    roomRate.setValidFrom(startDate);
+                    startDate = dateFormat.parse(startDateInput); // Convert String to Date
                }
                System.out.print("Enter Room Rate End Date (yyyy-MM-dd) (blank if no change)> ");
                String endDateInput = scanner.nextLine().trim();
                if(endDateInput.length() > 0) {
-                    Date endDate = dateFormat.parse(endDateInput); // Convert String to Date
-                    roomRate.setValidTo(endDate);
+                    endDate = dateFormat.parse(endDateInput); // Convert String to Date
                }
             } catch (ParseException ex) {
-               System.out.println("Please enter a valid Room Rate! \n");
+               System.out.println("Please enter a valid Date! \n");
             }
         }
-        roomRateSessionBeanRemote.updateRoomRate(roomRate);
-        System.out.println("Room type updated successfully!\n");
+
+        roomRateSessionBeanRemote.updateRoomRate(roomRate, name, roomTypeId, ratePerNight, rateType, startDate, endDate);
+        System.out.println("Room rate updated successfully!\n");
     }
 
     private void doDeleteRoomRate(RoomRate roomRate) {

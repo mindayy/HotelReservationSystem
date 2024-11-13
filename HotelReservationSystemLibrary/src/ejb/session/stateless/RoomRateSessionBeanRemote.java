@@ -5,6 +5,7 @@
 package ejb.session.stateless;
 
 import entity.RoomRate;
+import entity.RoomType;
 import enums.RateTypeEnum;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,10 +26,10 @@ public interface RoomRateSessionBeanRemote {
     public List<RoomRate> viewAllRoomRates();
     
     public RoomRate retrieveRoomRateById(Long roomRateId) throws RoomRateNotFoundException;
-    
-    public void updateRoomRate(RoomRate roomRate);
-    
+        
     public void deleteRoomRate(RoomRate roomRateToDelete);
     
     public Long getRoomTypeIdForRoomRate(Long roomRateId) throws RoomRateNotFoundException;
+    
+    public void updateRoomRate(RoomRate roomRate, String name, Long newRoomTypeId, BigDecimal newRatePerNight, RateTypeEnum newRateType, Date startDate, Date endDate);
 }

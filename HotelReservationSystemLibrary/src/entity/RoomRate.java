@@ -100,7 +100,7 @@ public class RoomRate implements Serializable {
     /**
      * @return the rateType
      */
-    public Enum getRateType() {
+    public RateTypeEnum getRateType() {
         return rateType;
     }
 

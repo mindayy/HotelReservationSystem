@@ -45,7 +45,7 @@ public class RoomType implements Serializable {
     @OneToMany(mappedBy = "roomType", cascade = {}, fetch = FetchType.LAZY)
     private List<Room> rooms;
     
-    @OneToMany(mappedBy = "roomType", cascade = {}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "roomType", cascade = {}, fetch = FetchType.EAGER)
     private List<RoomRate> roomRates;
     
     @OneToMany(mappedBy = "roomType", cascade = {}, fetch = FetchType.LAZY)

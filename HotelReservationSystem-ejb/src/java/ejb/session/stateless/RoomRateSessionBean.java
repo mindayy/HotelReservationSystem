@@ -65,9 +65,45 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
     } 
     
     @Override
-    public void updateRoomRate(RoomRate roomRate)  {
-        em.merge(roomRate); 
+    public void updateRoomRate(RoomRate roomRate, String name, Long newRoomTypeId, BigDecimal newRatePerNight, RateTypeEnum newRateType, Date startDate, Date endDate) {
+        RoomRate managedRoomRate = em.find(RoomRate.class, roomRate.getRoomRateId());
 
+        if (managedRoomRate != null) {
+            if (name != null) {
+                managedRoomRate.setRoomRateName(name);
+            }
+
+            if (newRatePerNight != null) {
+                managedRoomRate.setRatePerNight(newRatePerNight);
+            }
+
+            if (newRateType != null) {
+                managedRoomRate.setRateType(newRateType);
+            }
+
+            if (!managedRoomRate.getRoomType().getRoomTypeId().equals(newRoomTypeId)) {
+                RoomType newRoomType = em.find(RoomType.class, newRoomTypeId);   
+
+                RoomType currentRoomType = managedRoomRate.getRoomType();
+                if (currentRoomType != null) {
+                    currentRoomType.getRoomRates().remove(managedRoomRate);
+                }
+
+                managedRoomRate.setRoomType(newRoomType);
+                newRoomType.getRoomRates().add(managedRoomRate);
+                em.merge(newRoomType);
+            }
+            
+            if (startDate != null) {
+                managedRoomRate.setValidFrom(startDate);
+            }
+            
+            if (endDate != null) {
+                managedRoomRate.setValidTo(endDate);
+            }
+
+            em.merge(managedRoomRate);
+        }
     }
     
     @Override
@@ -77,6 +113,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
                 roomRateToDelete.setIsDisabled(true);
                 em.merge(roomRateToDelete);
             } else {
+                roomRateToDelete = em.merge(roomRateToDelete);
                 em.remove(roomRateToDelete);
             }
         }
@@ -101,6 +138,5 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
             throw new RoomRateNotFoundException("An error occurred while retrieving room type: " + e.getMessage());
         }
     }
-
     
 }
