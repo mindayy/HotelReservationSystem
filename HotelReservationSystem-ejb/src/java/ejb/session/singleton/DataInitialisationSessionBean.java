@@ -20,7 +20,7 @@ import javax.persistence.PersistenceContext;
  */
 @Singleton
 @LocalBean
-@Startup
+
 public class DataInitialisationSessionBean {
 
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
@@ -38,13 +38,13 @@ public class DataInitialisationSessionBean {
               .getSingleResult();
         } catch (NoResultException ex) {
             // If admin doesn't exist, create one
-            Employee admin = new Employee("sysadmin", "password", RoleEnum.SystemAdministrator, "admin@hotel.com");
+            Employee admin = new Employee("sysadmin1", "password", RoleEnum.SystemAdministrator, "admin@hotel.com");
             em.persist(admin);
-            admin = new Employee("opmanager", "password", RoleEnum.OperationManager, "admin@hotel.com");
+            admin = new Employee("opmanager1", "password", RoleEnum.OperationManager, "admin@hotel.com");
             em.persist(admin);
-            admin = new Employee("salesmanager", "password", RoleEnum.SalesManager, "admin@hotel.com");
+            admin = new Employee("salesmanager1", "password", RoleEnum.SalesManager, "admin@hotel.com");
             em.persist(admin);
-            admin = new Employee("guestrelo", "password", RoleEnum.GuestRelationOfficer, "admin@hotel.com");
+            admin = new Employee("guestrelo1", "password", RoleEnum.GuestRelationOfficer, "admin@hotel.com");
             em.persist(admin);
         }
     }
