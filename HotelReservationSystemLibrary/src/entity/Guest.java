@@ -94,7 +94,7 @@ public class Guest implements Serializable {
     }
     
 
-    public boolean isLoggedIn() {
+    public boolean isIsLoggedIn() {
         return isLoggedIn;
     }
 
@@ -102,6 +102,14 @@ public class Guest implements Serializable {
         this.isLoggedIn = isLoggedIn;
     }
 
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
 
     @Override
     public int hashCode() {
@@ -127,19 +135,5 @@ public class Guest implements Serializable {
     public String toString() {
         return "entity.Guest[ id=" + guestId + " ]";
     }
-
-    /**
-     * @return the reservations
-     */
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    /**
-     * @param reservations the reservations to set
-     */
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
-    }
-    
+  
 }

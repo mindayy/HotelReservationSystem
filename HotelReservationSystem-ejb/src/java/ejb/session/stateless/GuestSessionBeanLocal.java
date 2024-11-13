@@ -5,9 +5,12 @@
 package ejb.session.stateless;
 
 import entity.Guest;
+import entity.Reservation;
+import java.util.List;
 import javax.ejb.Local;
 import util.exception.GuestNotFoundException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.ReservationNotFoundException;
 
 /**
  *
@@ -21,5 +24,10 @@ public interface GuestSessionBeanLocal {
     public Guest retrieveGuestById(Long guestId) throws GuestNotFoundException;
     
     public Guest guestLogin(String username, String password) throws InvalidLoginCredentialException;
+    
+    public Reservation viewReservationDetails(Long reservationId) throws ReservationNotFoundException;
+    
+    public List<Reservation> viewAllMyReservations(Long guestId);
+    
     
 }

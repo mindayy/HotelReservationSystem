@@ -5,6 +5,8 @@
 package ejb.session.stateless;
 
 import entity.Guest;
+import entity.Reservation;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -12,6 +14,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.exception.GuestNotFoundException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.ReservationNotFoundException;
 
 /**
  *
@@ -49,7 +52,7 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
 
         try {
             Guest guest = (Guest) query.getSingleResult();
-            if (guest.isLoggedIn()) {
+            if (guest.isIsLoggedIn()) {
                 System.out.println("Guest is already logged in.");
             }
             if (guest.getPassword().equals(password)) {
@@ -65,6 +68,34 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
     }
     
     
+    
+    
+    @Override
+    public Reservation viewReservationDetails(Long reservationId) throws ReservationNotFoundException {
+        Reservation reservation = em.find(Reservation.class, reservationId);
+        if (reservation == null) {
+            throw new ReservationNotFoundException("Reservation ID " + reservationId + " not found.");
+        }
+        return reservation;
+    }
+
+    /*
+    @Override
+    public List<Reservation> viewAllMyReservations(Long guestId) {
+        Guest guest = em.find(Guest.class, guestId);
+        List<Reservation> reservations = guest.getReservations();
+
+        return reservations;
+    }
+    */
+    
+    @Override
+    public List<Reservation> viewAllMyReservations(Long guestId) {
+        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.guest.guestId = :guestId");
+        query.setParameter("guestId", guestId);
+        return query.getResultList();
+    }
+
 
 
 
