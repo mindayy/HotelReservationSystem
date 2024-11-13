@@ -4,6 +4,7 @@
  */
 package entity;
 
+import enums.RoomAllocationExceptionTypeEnum;
 import java.io.Serializable;
 import java.time.LocalDate;
 import javax.persistence.Column;
@@ -15,7 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -32,17 +33,18 @@ public class RoomAllocationException implements Serializable {
     @Column(nullable = false)
     private String message;  // RoomAllocationException message
 
-    @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
+    @OneToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private ReservationRoom reservationRoom;  // Relationship with ReserveRoom entity
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String exceptionType;  // Type of exception (upgrade/no room)
+    private RoomAllocationExceptionTypeEnum exceptionType;
 
     public RoomAllocationException() {
     }
 
-    public RoomAllocationException(String message, ReservationRoom reservationRoom, String exceptionType) {
+    public RoomAllocationException(String message, ReservationRoom reservationRoom, RoomAllocationExceptionTypeEnum exceptionType) {
         this.message = message;
         this.reservationRoom = reservationRoom;
         this.exceptionType = exceptionType;
@@ -67,22 +69,22 @@ public class RoomAllocationException implements Serializable {
     }
 
 
-    public ReservationRoom getReserveRoom() {
+    public ReservationRoom getReservationRoom() {
         return reservationRoom;
     }
 
 
-    public void setReserveRoom(ReservationRoom reservationRoom) {
+    public void setReservationRoom(ReservationRoom reservationRoom) {
         this.reservationRoom = reservationRoom;
     }
 
 
-    public String getExceptionType() {
+    public RoomAllocationExceptionTypeEnum getExceptionType() {
         return exceptionType;
     }
 
 
-    public void setExceptionType(String exceptionType) {
+    public void setExceptionType(RoomAllocationExceptionTypeEnum exceptionType) {
         this.exceptionType = exceptionType;
     }
 

@@ -7,6 +7,7 @@ package horsmanagementclient;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
 import ejb.session.stateless.ReservationSessionBeanRemote;
+import ejb.session.stateless.RoomAllocationExceptionSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
@@ -27,6 +28,8 @@ class MainApp {
     private ReservationSessionBeanRemote reservationSessionBeanRemote;
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
     private PartnerSessionBeanRemote partnerSessionBeanRemote;
+    private RoomAllocationExceptionSessionBeanRemote roomAllocationExceptionSessionBeanRemote;
+
     
     private SystemAdministrationModule systemAdministrationModule;
     private HotelOperationModule hotelOperationModule;
@@ -35,13 +38,15 @@ class MainApp {
     private Employee currentEmployee;
 
     MainApp(RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, 
-            ReservationSessionBeanRemote reservationSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote) {
+            ReservationSessionBeanRemote reservationSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote,
+            RoomAllocationExceptionSessionBeanRemote roomAllocationExceptionSessionBeanRemote) {
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.reservationSessionBeanRemote = reservationSessionBeanRemote;
         this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
         this.roomSessionBeanRemote = roomSessionBeanRemote;
         this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
         this.partnerSessionBeanRemote = partnerSessionBeanRemote;
+        this.roomAllocationExceptionSessionBeanRemote = roomAllocationExceptionSessionBeanRemote;
     }
 
     void runApp() {
@@ -68,7 +73,7 @@ class MainApp {
                         System.out.println("Login successful!\n");
                         
                         systemAdministrationModule = new SystemAdministrationModule(employeeSessionBeanRemote, partnerSessionBeanRemote, currentEmployee);
-                        hotelOperationModule = new HotelOperationModule(roomTypeSessionBeanRemote, roomSessionBeanRemote, roomRateSessionBeanRemote, currentEmployee);
+                        hotelOperationModule = new HotelOperationModule(roomTypeSessionBeanRemote, roomSessionBeanRemote, roomRateSessionBeanRemote, roomAllocationExceptionSessionBeanRemote, currentEmployee);
                         frontOfficeModule = new FrontOfficeModule(reservationSessionBeanRemote, currentEmployee);
                         menuMain();
                     }

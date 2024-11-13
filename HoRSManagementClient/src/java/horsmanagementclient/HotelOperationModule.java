@@ -4,6 +4,7 @@
  */
 package horsmanagementclient;
 
+import ejb.session.stateless.RoomAllocationExceptionSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
@@ -35,17 +36,19 @@ public class HotelOperationModule {
     private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
     private RoomSessionBeanRemote roomSessionBeanRemote;
     private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
+    private RoomAllocationExceptionSessionBeanRemote roomAllocationExceptionSessionBeanRemote;
     
     private Employee currentEmployee;
 
     public HotelOperationModule() {
     }
 
-    public HotelOperationModule(RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, Employee currentEmployee) {
+    public HotelOperationModule(RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, RoomAllocationExceptionSessionBeanRemote roomAllocationExceptionSessionBeanRemote, Employee currentEmployee) {
         this();
         this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
         this.roomSessionBeanRemote = roomSessionBeanRemote;
         this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
+        this.roomAllocationExceptionSessionBeanRemote = roomAllocationExceptionSessionBeanRemote;
         this.currentEmployee = currentEmployee;
     }
     
@@ -694,7 +697,24 @@ public class HotelOperationModule {
     }
 
     private void doViewAllRoomAllocationExceptionReport() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("*** Hotel Operation :: View Room Allocation Exception Report ***\n");
+
+        try {
+            // Call the session bean to generate the exception report
+            List<String> exceptionReport = roomAllocationExceptionSessionBeanRemote.generateRoomAllocationExceptionReport();
+
+            // Check if there are any exceptions to display
+            if (exceptionReport.isEmpty()) {
+                System.out.println("There are no room allocation exceptions at this time.\n");
+            } else {
+                // Iterate over the report and display each entry
+                for (String reportEntry : exceptionReport) {
+                    System.out.println(reportEntry);  // Print each report entry
+                }
+            }
+        } catch (Exception ex) {
+            System.out.println("An error occurred while retrieving the room allocation exception report: " + ex.getMessage() + "\n");
+        }
     }
 
 }

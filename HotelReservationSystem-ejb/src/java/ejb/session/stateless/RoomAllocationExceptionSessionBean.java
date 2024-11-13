@@ -6,6 +6,8 @@ package ejb.session.stateless;
 
 import entity.ReservationRoom;
 import entity.RoomAllocationException;
+import enums.RoomAllocationExceptionTypeEnum;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -21,15 +23,35 @@ public class RoomAllocationExceptionSessionBean implements RoomAllocationExcepti
 
     // Create a new RoomAllocationException
     @Override
-    public void createRoomAllocationException(ReservationRoom reservationRoom, String exceptionType, String message) {
+    public void createRoomAllocationException(ReservationRoom reservationRoom, RoomAllocationExceptionTypeEnum exceptionType, String message) {
         RoomAllocationException exception = new RoomAllocationException(message, reservationRoom, exceptionType);
         em.persist(exception);
     }
 
-    // Retrieve all Room Allocation Exceptions
+    // Method to retrieve a RoomAllocationException by its ID
     @Override
-    public List<RoomAllocationException> retrieveRoomAllocationExceptions() {
-        Query query = em.createQuery("SELECT e FROM RoomAllocationException e WHERE e.exceptionType IN ('UPGRADE_ROOM', 'NO_ROOM_AVAILABLE')");
-        return query.getResultList();
+    public RoomAllocationException retrieveRoomAllocationExceptionById(Long exceptionId) {
+        return em.find(RoomAllocationException.class, exceptionId);
     }
+
+    // Method to retrieve all RoomAllocationExceptions (for reports or admin viewing)
+    @Override
+    public List<RoomAllocationException> retrieveAllRoomAllocationExceptions() {
+        return em.createQuery("SELECT r FROM RoomAllocationException r", RoomAllocationException.class).getResultList();
+    }
+    
+    // Method to generate an exception report with detailed messages
+    @Override
+    public List<String> generateRoomAllocationExceptionReport() {
+        List<RoomAllocationException> exceptions = retrieveAllRoomAllocationExceptions();
+        List<String> report = new ArrayList<>();
+        for (RoomAllocationException exception : exceptions) {
+            String reportEntry = "Reservation ID: " + exception.getReservationRoom().getReservationRoomId() 
+                    + " | Message: " + exception.getMessage() 
+                    + " | Exception Type: " + exception.getExceptionType();
+            report.add(reportEntry);
+        }
+        return report;
+    }
+    
 }

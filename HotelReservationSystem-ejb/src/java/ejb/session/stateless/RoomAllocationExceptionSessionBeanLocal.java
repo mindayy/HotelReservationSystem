@@ -8,6 +8,7 @@ import java.util.List;
 import javax.ejb.Local;
 import entity.ReservationRoom;
 import entity.RoomAllocationException;
+import enums.RoomAllocationExceptionTypeEnum;
 
 
 /**
@@ -17,8 +18,12 @@ import entity.RoomAllocationException;
 @Local
 public interface RoomAllocationExceptionSessionBeanLocal {
     
-    public void createRoomAllocationException(ReservationRoom reservationRoom, String exceptionType, String message);
+    public void createRoomAllocationException(ReservationRoom reservationRoom, RoomAllocationExceptionTypeEnum exceptionType, String message);
     
-    public List<RoomAllocationException> retrieveRoomAllocationExceptions();
+    public RoomAllocationException retrieveRoomAllocationExceptionById(Long exceptionId);
+    
+    public List<RoomAllocationException> retrieveAllRoomAllocationExceptions();
+    
+    public List<String> generateRoomAllocationExceptionReport();
     
 }
