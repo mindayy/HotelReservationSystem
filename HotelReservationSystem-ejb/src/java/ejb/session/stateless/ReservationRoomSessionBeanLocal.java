@@ -4,6 +4,7 @@
  */
 package ejb.session.stateless;
 
+import entity.Reservation;
 import entity.ReservationRoom;
 import entity.Room;
 import java.util.Date;
@@ -21,7 +22,6 @@ public interface ReservationRoomSessionBeanLocal {
     
     public List<Room> searchAvailableRooms(Date checkInDate, Date checkOutDate, Long roomTypeId);
     
-    public ReservationRoom reserveRoom(Long roomId, Long reservationId, Date checkInDate, Date checkOutDate) throws RoomNotAvailableException, ReservationNotFoundException;
-    
+    public ReservationRoom reserveRoom(Long roomId, Reservation reservation, Date checkInDate, Date checkOutDate) throws RoomNotAvailableException, ReservationNotFoundException;
     
 }

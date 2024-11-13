@@ -26,7 +26,6 @@ public class ReservationRoomSessionBean implements ReservationRoomSessionBeanRem
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
     private EntityManager em;
 
-    // Search for available rooms
     @Override
     public List<Room> searchAvailableRooms(Date checkInDate, Date checkOutDate, Long roomTypeId) {
         Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomType.roomTypeId = :roomTypeId "
@@ -35,16 +34,12 @@ public class ReservationRoomSessionBean implements ReservationRoomSessionBeanRem
         query.setParameter("roomTypeId", roomTypeId);
         query.setParameter("checkInDate", checkInDate);
         query.setParameter("checkOutDate", checkOutDate);
-        
-        return query.getResultList(); // Return available rooms that don't overlap with existing reservations
+        return query.getResultList();
     }
 
-    // Reserve a room
     @Override
-    public ReservationRoom reserveRoom(Long roomId, Long reservationId, Date checkInDate, Date checkOutDate) throws RoomNotAvailableException, ReservationNotFoundException {
+    public ReservationRoom reserveRoom(Long roomId, Reservation reservation, Date checkInDate, Date checkOutDate) throws RoomNotAvailableException, ReservationNotFoundException {
         Room room = em.find(Room.class, roomId);
-        Reservation reservation = em.find(Reservation.class, reservationId);
-        
         if (room == null || reservation == null) {
             throw new ReservationNotFoundException("Room or Reservation not found.");
         }
@@ -60,10 +55,9 @@ public class ReservationRoomSessionBean implements ReservationRoomSessionBeanRem
             throw new RoomNotAvailableException("Room is not available for the specified dates.");
         }
 
-        // If room is available, create a new reservation room entry
+        // Create a new ReservationRoom entry
         ReservationRoom reservationRoom = new ReservationRoom(room, reservation, checkInDate, checkOutDate);
         em.persist(reservationRoom);
-        
-        return reservationRoom; // Return the reserved room
+        return reservationRoom;
     }
 }

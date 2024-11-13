@@ -4,8 +4,13 @@
  */
 package ejb.session.stateless;
 
+import entity.Reservation;
+import java.util.Date;
+import java.util.List;
 import javax.ejb.Local;
+import util.exception.GuestNotFoundException;
 import util.exception.ReservationNotFoundException;
+import util.exception.RoomNotAvailableException;
 
 /**
  *
@@ -17,5 +22,10 @@ public interface ReservationSessionBeanLocal {
     public void checkInGuest(Long reservationId) throws ReservationNotFoundException;
 
     public void checkOutGuest(Long reservationId) throws ReservationNotFoundException;
+    
+    public Reservation reserveRoom(Long guestId, List<Long> roomIds, Date checkInDate, Date checkOutDate) 
+            throws GuestNotFoundException, ReservationNotFoundException, RoomNotAvailableException;
+    
+    
     
 }
