@@ -11,7 +11,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import util.exception.ReservationNotFoundException;
-import util.exception.RoomAllocationException;
 
 /**
  *

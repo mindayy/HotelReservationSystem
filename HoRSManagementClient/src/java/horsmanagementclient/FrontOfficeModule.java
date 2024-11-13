@@ -10,7 +10,6 @@ import enums.RoleEnum;
 import java.util.Scanner;
 import util.exception.InvalidAccessRightException;
 import util.exception.ReservationNotFoundException;
-import util.exception.RoomAllocationException;
 
 /**
  *
@@ -83,8 +82,6 @@ public class FrontOfficeModule {
             System.out.println("Guest successfully checked in!\n");
         } catch (ReservationNotFoundException ex) {
             System.out.println("An error occurred: " + ex.getMessage() + "\n");
-        } catch (RoomAllocationException ex) {
-            System.out.println("Room allocation issue: " + ex.getMessage() + "\n");
         } catch (Exception ex) {
             System.out.println("An unexpected error occurred: " + ex.getMessage() + "\n");
         }

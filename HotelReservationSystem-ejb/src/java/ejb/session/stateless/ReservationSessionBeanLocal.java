@@ -6,7 +6,6 @@ package ejb.session.stateless;
 
 import javax.ejb.Local;
 import util.exception.ReservationNotFoundException;
-import util.exception.RoomAllocationException;
 
 /**
  *
