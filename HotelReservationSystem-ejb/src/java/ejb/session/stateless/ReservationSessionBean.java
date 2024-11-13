@@ -24,7 +24,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     private EntityManager em;
     
     @Override
-    public void checkInGuest(Long reservationId) throws RoomAllocationException, ReservationNotFoundException {
+    public void checkInGuest(Long reservationId) throws ReservationNotFoundException {
         Reservation reservation = em.find(Reservation.class, reservationId);
         if (reservation == null) {
             throw new ReservationNotFoundException("Room Reservation with ID " + reservationId + " not found.");

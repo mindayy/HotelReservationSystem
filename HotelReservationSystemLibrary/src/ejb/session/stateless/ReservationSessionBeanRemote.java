@@ -15,7 +15,7 @@ import util.exception.RoomAllocationException;
 @Remote
 public interface ReservationSessionBeanRemote {
     
-    public void checkInGuest(Long reservationId) throws RoomAllocationException, ReservationNotFoundException;
+    public void checkInGuest(Long reservationId) throws ReservationNotFoundException;
     
     public void checkOutGuest(Long reservationId) throws ReservationNotFoundException;
     

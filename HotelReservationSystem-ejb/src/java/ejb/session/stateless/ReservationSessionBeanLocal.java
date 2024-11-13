@@ -15,7 +15,7 @@ import util.exception.RoomAllocationException;
 @Local
 public interface ReservationSessionBeanLocal {
 
-    public void checkInGuest(Long reservationId) throws RoomAllocationException, ReservationNotFoundException;
+    public void checkInGuest(Long reservationId) throws ReservationNotFoundException;
 
     public void checkOutGuest(Long reservationId) throws ReservationNotFoundException;
     

@@ -58,6 +58,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
     @Override
     public void deleteRoomType(RoomType roomTypeToDelete) {
         if (roomTypeToDelete != null) {
+            roomTypeToDelete = em.merge(roomTypeToDelete);
             if (isRoomTypeInUse(roomTypeToDelete)) {
                 roomTypeToDelete.setIsDisabled(true);
                 em.merge(roomTypeToDelete);

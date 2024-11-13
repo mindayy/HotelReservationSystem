@@ -13,7 +13,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -50,6 +52,10 @@ public class RoomType implements Serializable {
     
     @OneToMany(mappedBy = "roomType", cascade = {}, fetch = FetchType.LAZY)
     private List<Reservation> reservations;
+    
+    @OneToOne
+    @JoinColumn(name = "nextHigherRoomTypeId")  
+    private RoomType nextHigherRoomType;
     
     // empty constructor
     public RoomType() {
@@ -176,6 +182,20 @@ public class RoomType implements Serializable {
      */
     public void setIsDisabled(Boolean isDisabled) {
         this.isDisabled = isDisabled;
+    }
+
+    /**
+     * @return the nextHigherRoomType
+     */
+    public RoomType getNextHigherRoomType() {
+        return nextHigherRoomType;
+    }
+
+    /**
+     * @param nextHigherRoomType the nextHigherRoomType to set
+     */
+    public void setNextHigherRoomType(RoomType nextHigherRoomType) {
+        this.nextHigherRoomType = nextHigherRoomType;
     }
 
     @Override

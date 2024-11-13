@@ -170,6 +170,29 @@ public class HotelOperationModule {
         newRoomType.setCapacity(capacity);
         System.out.print("Enter Room Type Amenities> ");
         newRoomType.setAmenities(scanner.nextLine().trim());
+        
+        List<RoomType> roomTypes = roomTypeSessionBeanRemote.viewAllRoomTypes();
+        System.out.printf("%-12s %-20s\n", "Room Type Id", "Name");
+        for(RoomType existingRoomType:roomTypes)
+        {
+        System.out.printf("%-12s %-20s\n", existingRoomType.getRoomTypeId(), existingRoomType.getName());
+        }
+        
+        System.out.print("Enter Next Higher Room Type Id> ");
+        Long nextHigherRoomTypeId = scanner.nextLong();
+        scanner.nextLine();
+        RoomType nextHigherRoomType = null;
+        try {
+            nextHigherRoomType = roomTypeSessionBeanRemote.retrieveRoomTypeById(nextHigherRoomTypeId);
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("An error has occurred while retrieving room type: " + ex.getMessage() + "\n");
+        }
+        if (nextHigherRoomType != null) {
+            newRoomType.setNextHigherRoomType(nextHigherRoomType);
+        } else {
+            System.out.println("Next Higher Room Type not set due to invalid ID.");
+        }
+        
         newRoomType.setIsDisabled(false);
 
         Long newRoomTypeId = roomTypeSessionBeanRemote.createNewRoomType(newRoomType);
@@ -187,10 +210,17 @@ public class HotelOperationModule {
 
         try {
             RoomType roomType = roomTypeSessionBeanRemote.retrieveRoomTypeById(roomTypeId);
-            System.out.printf("%-12s %-20s %-30s %-10s %-12s %-10s %-30s\n", "Room Type Id", "Name",
-                    "Description", "Size", "Bed", "Capacity", "Amenities");
-            System.out.printf("%-12s %-20s %-30s %-10s %-12s %-10s %-30s\n", roomType.getRoomTypeId(), roomType.getName(),
-                    roomType.getDescription(), roomType.getSize(), roomType.getBed(), roomType.getCapacity(), roomType.getAmenities());
+            System.out.printf("%-12s %-20s %-30s %-10s %-12s %-10s %-30s %-10s\n", "Room Type Id", "Name",
+                    "Description", "Size", "Bed", "Capacity", "Amenities", "Next Higher Room Type");
+            
+            // display null if no nexthigheroomtype
+            String nextHigherRoomTypeName = (roomType.getNextHigherRoomType() != null) ? 
+                roomType.getNextHigherRoomType().getName() : "None";
+            
+            System.out.printf("%-12s %-20s %-30s %-10s %-12s %-10s %-30s %-10s\n", roomType.getRoomTypeId(), roomType.getName(),
+                    roomType.getDescription(), roomType.getSize(), roomType.getBed(), roomType.getCapacity(), 
+                    roomType.getAmenities(), nextHigherRoomTypeName);
+            
             System.out.println("------------------------");
             System.out.println("1: Update Room Type");
             System.out.println("2: Delete Room Type");
@@ -264,8 +294,31 @@ public class HotelOperationModule {
         if(input.length() > 0) {
             roomType.setAmenities(input);
         }
+        
+        List<RoomType> roomTypes = roomTypeSessionBeanRemote.viewAllRoomTypes();
+        System.out.printf("%-12s %-20s\n", "Room Type Id", "Name");
+        for(RoomType existingRoomType:roomTypes)
+        {
+        System.out.printf("%-12s %-20s\n", existingRoomType.getRoomTypeId(), existingRoomType.getName());
+        }
+        
+        System.out.print("Enter Next Higher Room Type ID (blank if no change)> ");
+        input = scanner.nextLine(); 
+        RoomType nextHigherRoomType = null;
+
+        if (input.trim().length() > 0) {
+            try {
+                Long roomTypeId = Long.parseLong(input); 
+                nextHigherRoomType = roomTypeSessionBeanRemote.retrieveRoomTypeById(roomTypeId);
+            } catch (RoomTypeNotFoundException ex) {
+                System.out.println("An error has occurred while retrieving room type: " + ex.getMessage() + "\n");
+            } 
+        }
+        
+        roomType.setNextHigherRoomType(nextHigherRoomType);
         roomTypeSessionBeanRemote.updateRoomType(roomType);
         System.out.println("Room type updated successfully!\n");
+        
     }
 
     private void doDeleteRoomType(RoomType roomType) {
@@ -273,7 +326,7 @@ public class HotelOperationModule {
         String input;
         
         System.out.println("*** Hotel Reservation System :: Hotel Operation :: View Room type Details :: Delete Room Type ***\n");
-        System.out.printf("Confirm Delete Room Type %s (Room Type ID: %d) (Enter 'Y' to Delete)> ", roomType.getName(), roomType.getRoomTypeId());
+        System.out.printf("Confirm Delete Room Type: %s (Room Type ID: %d) (Enter 'Y' to Delete)> ", roomType.getName(), roomType.getRoomTypeId());
         input = scanner.nextLine().trim();
         
         if(input.equals("Y"))
@@ -295,13 +348,15 @@ public class HotelOperationModule {
         System.out.println("*** Hotel Reservation System :: Hotel Operation :: View All Room Types ***\n");
         
         List<RoomType> roomTypes = roomTypeSessionBeanRemote.viewAllRoomTypes();
-        System.out.printf("%-12s %-20s %-30s %-10s %-12s %-10s %-30s\n", "Room Type Id", "Name",
-                    "Description", "Size", "Bed", "Capacity", "Amenities");
+        System.out.printf("%-12s %-20s %-30s %-10s %-12s %-10s %-30s %-10s\n", "Room Type Id", "Name",
+                    "Description", "Size", "Bed", "Capacity", "Amenities",  "Next Higher Room Type");
 
         for(RoomType roomType:roomTypes)
-        {
-            System.out.printf("%-12s %-20s %-30s %-10s %-12s %-10s %-30s\n", roomType.getRoomTypeId(), roomType.getName(),
-                    roomType.getDescription(), roomType.getSize(), roomType.getBed(), roomType.getCapacity(), roomType.getAmenities());
+        {   
+            String nextHigherRoomTypeName = (roomType.getNextHigherRoomType() != null) ? 
+                roomType.getNextHigherRoomType().getName() : "None";
+            System.out.printf("%-12s %-20s %-30s %-10s %-12s %-10s %-30s %-10s \n", roomType.getRoomTypeId(), roomType.getName(),
+                    roomType.getDescription(), roomType.getSize(), roomType.getBed(), roomType.getCapacity(), roomType.getAmenities(), nextHigherRoomTypeName);
         }
         
         System.out.print("Press any key to continue...> ");
