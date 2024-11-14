@@ -5,6 +5,7 @@
 package ejb.session.stateless;
 
 import entity.Customer;
+import entity.Guest;
 import entity.Reservation;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -36,8 +37,8 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
     }
     
     @Override
-    public Customer retrieveGuestById(Long guestId) throws GuestNotFoundException {
-        Customer guest = em.find(Customer.class, guestId);
+    public Guest retrieveGuestById(Long guestId) throws GuestNotFoundException {
+        Guest guest = em.find(Guest.class, guestId);
         if (guest != null) {
             return guest;
         } else {
@@ -47,18 +48,25 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
     
     @Override
     public Customer guestLogin(String username, String password) throws InvalidLoginCredentialException {
-        Query query = em.createQuery("SELECT e FROM Guest g WHERE g.username = :inUsername");
+        // Query should target the Customer class as it has username and password
+        Query query = em.createQuery("SELECT c FROM Customer c WHERE c.username = :inUsername");
         query.setParameter("inUsername", username);
 
         try {
-            Customer guest = (Customer) query.getSingleResult();
-            if (guest.isIsLoggedIn()) {
-                System.out.println("Guest is already logged in.");
+            // Retrieve the Customer (not Guest)
+            Customer customer = (Customer) query.getSingleResult();
+
+            // Check if the guest is already logged in
+            if (customer.isIsLoggedIn()) {
+                System.out.println("Customer is already logged in.");
+                return customer; // Optionally return the logged-in customer
             }
-            if (guest.getPassword().equals(password)) {
-                guest.setIsLoggedIn(true); 
-                em.merge(guest);
-                return guest;
+
+            // Check if the password matches
+            if (customer.getPassword().equals(password)) {
+                customer.setIsLoggedIn(true);  // Set login status
+                em.merge(customer);  // Persist the change
+                return customer;
             } else {
                 throw new InvalidLoginCredentialException("Invalid password!");
             }
@@ -66,9 +74,7 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
             throw new InvalidLoginCredentialException("Username does not exist!");
         }
     }
-    
-    
-    
+
     
     @Override
     public Reservation viewReservationDetails(Long reservationId) throws ReservationNotFoundException {

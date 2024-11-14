@@ -5,6 +5,7 @@
 package ejb.session.stateless;
 
 import entity.Customer;
+import entity.Guest;
 import entity.Reservation;
 import java.util.List;
 import javax.ejb.Local;
@@ -21,7 +22,7 @@ public interface GuestSessionBeanLocal {
 
     public void registerGuest(String email, String username, String password);
     
-    public Customer retrieveGuestById(Long guestId) throws GuestNotFoundException;
+    public Guest retrieveGuestById(Long guestId) throws GuestNotFoundException;
     
     public Customer guestLogin(String username, String password) throws InvalidLoginCredentialException;
     
