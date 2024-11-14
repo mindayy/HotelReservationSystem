@@ -44,8 +44,6 @@ public class Guest implements Serializable {
         this.email = email;
 
     }
-    
-    
     public Long getGuestId() {
         return guestId;
     }

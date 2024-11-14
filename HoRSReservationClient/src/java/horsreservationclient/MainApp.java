@@ -174,14 +174,31 @@ class MainApp {
         Scanner scanner = new Scanner(System.in);
         System.out.println("*** Hotel Reservation System :: Search Hotel Room ***\n");
 
-        System.out.print("Enter Check-In Date (yyyy-mm-dd)> ");
-        String checkInDateStr = scanner.nextLine().trim();
-        System.out.print("Enter Check-Out Date (yyyy-mm-dd)> ");
-        String checkOutDateStr = scanner.nextLine().trim();
+        String checkInDateStr, checkOutDateStr;
+        Date checkInDate = null, checkOutDate = null;
+    
+        // Validate check-in date
+        while (checkInDate == null) {
+            System.out.print("Enter Check-In Date (yyyy-mm-dd)> ");
+            checkInDateStr = scanner.nextLine().trim();
+            try {
+                checkInDate = Date.valueOf(checkInDateStr);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid date format. Please use yyyy-mm-dd format.");
+            }
+        }
 
-        Date checkInDate = Date.valueOf(checkInDateStr);
-        Date checkOutDate = Date.valueOf(checkOutDateStr);
-        
+        // Validate check-out date
+        while (checkOutDate == null) {
+            System.out.print("Enter Check-Out Date (yyyy-mm-dd)> ");
+            checkOutDateStr = scanner.nextLine().trim();
+            try {
+                checkOutDate = Date.valueOf(checkOutDateStr);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid date format. Please use yyyy-mm-dd format.");
+            }
+        }
+
         List<RoomType> roomTypes = roomTypeSessionBeanRemote.viewAllRoomTypes();
         System.out.printf("%-12s %-20s %-30s %-10s %-12s %-10s %-30s %-10s\n", "Room Type Id", "Name",
                     "Description", "Size", "Bed", "Capacity", "Amenities",  "Next Higher Room Type");
@@ -205,13 +222,35 @@ class MainApp {
         } else {
             System.out.println("Available Rooms: ");
             for (Room room : availableRooms) {
-                System.out.println("Room ID: " + room.getRoomId() + "Room Number: " + room.getRoomNumber() + ", Room Type: " + room.getRoomType().getName());
+                System.out.println("Room ID: " + room.getRoomId() + " Room Number: " + room.getRoomNumber() + ", Room Type: " + room.getRoomType().getName());
             }
             BigDecimal reservationAmt = reservationSessionBeanRemote.reservationAmt(roomTypeId, checkInDate, checkOutDate);
             System.out.println("Reservation Amount: $" + reservationAmt);
             
         }
-        
+        System.out.println("------------------------");
+        System.out.println("1: Reserve Hotel Room");
+        System.out.println("2: Back\n");
+        System.out.print("> ");
+        int response = scanner.nextInt();
+
+        if (response == 1)
+        {   
+            if (currentGuest != null  && currentGuest.isIsLoggedIn()) {
+                doReserveRoom();
+            }
+            else {
+                System.out.println("You must be logged in to reserve a hotel room.");
+            }
+        } else if (response == 2) {
+            return;
+        } else {
+            System.out.println("Invalid option. Please try again.");
+        }
+    }
+    
+    private void doReserveRoom() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private void viewMyReservationDetails() {
