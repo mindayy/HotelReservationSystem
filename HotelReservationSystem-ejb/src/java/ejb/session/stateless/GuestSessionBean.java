@@ -4,7 +4,7 @@
  */
 package ejb.session.stateless;
 
-import entity.Guest;
+import entity.Customer;
 import entity.Reservation;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -31,13 +31,13 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
 
     @Override
     public void registerGuest(String email, String username, String password) {
-        Guest guest = new Guest(email, username, password, false);
+        Customer guest = new Customer(email, username, password, false);
         em.persist(guest);
     }
     
     @Override
-    public Guest retrieveGuestById(Long guestId) throws GuestNotFoundException {
-        Guest guest = em.find(Guest.class, guestId);
+    public Customer retrieveGuestById(Long guestId) throws GuestNotFoundException {
+        Customer guest = em.find(Customer.class, guestId);
         if (guest != null) {
             return guest;
         } else {
@@ -46,12 +46,12 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
     }
     
     @Override
-    public Guest guestLogin(String username, String password) throws InvalidLoginCredentialException {
+    public Customer guestLogin(String username, String password) throws InvalidLoginCredentialException {
         Query query = em.createQuery("SELECT e FROM Guest g WHERE g.username = :inUsername");
         query.setParameter("inUsername", username);
 
         try {
-            Guest guest = (Guest) query.getSingleResult();
+            Customer guest = (Customer) query.getSingleResult();
             if (guest.isIsLoggedIn()) {
                 System.out.println("Guest is already logged in.");
             }
@@ -82,7 +82,7 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
     /*
     @Override
     public List<Reservation> viewAllMyReservations(Long guestId) {
-        Guest guest = em.find(Guest.class, guestId);
+        Customer guest = em.find(Customer.class, guestId);
         List<Reservation> reservations = guest.getReservations();
 
         return reservations;

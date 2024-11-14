@@ -4,7 +4,7 @@
  */
 package ejb.session.stateless;
 
-import entity.Guest;
+import entity.Customer;
 import entity.Reservation;
 import entity.ReservationRoom;
 import entity.Room;
@@ -72,7 +72,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     
     @Override
     public Reservation reserveRoom(Long guestId, List<Long> roomIds, Date checkInDate, Date checkOutDate) throws GuestNotFoundException, RoomNotAvailableException, ReservationNotFoundException {
-        Guest guest = em.find(Guest.class, guestId);
+        Customer guest = em.find(Customer.class, guestId);
         if (guest == null) {
             throw new GuestNotFoundException("Guest ID " + guestId + " does not exist.");
         }

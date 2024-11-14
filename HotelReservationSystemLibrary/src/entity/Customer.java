@@ -2,86 +2,79 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-/*package entity;
+package entity;
 
+import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
 
 /**
  *
  * @author min
  */
-/*
 @Entity
+
 public class Customer extends Guest {
 
-    @Column(nullable = false, length = 64, unique = true)
-    private String email;
-    @Column(nullable = false, length = 32, unique = true)
-    private int phoneNum;
-    @Column(nullable = false, length = 32, unique = true)
-    private String passportNum;
+    @Column(nullable = false, length = 64)
+    private String username;
+    @Column(nullable = false, length = 64)
+    private String password;
+    @Column(nullable = false)
+    private boolean isLoggedIn;
+    
+
 
     public Customer() {
     }
 
-    public Customer(String email, int phoneNum, String passportNum) {
-        this.email = email;
-        this.phoneNum = phoneNum;
-        this.passportNum = passportNum;
+    public Customer(String email,String username, String password, boolean isLoggedIn) {
+        super(email);
+        this.username = username;
+        this.password = password;
+        this.isLoggedIn = isLoggedIn;
+    }
+
+
+    public String getUsername() {
+        return username;
+    }
+
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+
+    public String getPassword() {
+        return password;
+    }
+
+
+    public void setPassword(String password) {
+        this.password = password;
     }
     
 
-    /**
-     * @return the email
-     */
-/*
-    public String getEmail() {
-        return email;
+    public boolean isIsLoggedIn() {
+        return isLoggedIn;
     }
 
-    /**
-     * @param email the email to set
-     */
-/*
-    public void setEmail(String email) {
-        this.email = email;
+    public void setIsLoggedIn(boolean isLoggedIn) {
+        this.isLoggedIn = isLoggedIn;
     }
-
-    /**
-     * @return the phoneNum
-     */
-/*
-    public int getPhoneNum() {
-        return phoneNum;
+    
+    @Override
+    public String toString() {
+        return "entity.Customer[ id=" + getGuestId() + ", username=" + username + " ]";
     }
-
-    /**
-     * @param phoneNum the phoneNum to set
-     */
-/*
-    public void setPhoneNum(int phoneNum) {
-        this.phoneNum = phoneNum;
-    }
-
-    /**
-     * @return the passportNum
-     */
-/*
-    public String getPassportNum() {
-        return passportNum;
-    }
-
-    /**
-     * @param passportNum the passportNum to set
-     */
-/*
-    public void setPassportNum(String passportNum) {
-        this.passportNum = passportNum;
-    }
-
-
 
 }
-*/

@@ -51,7 +51,7 @@ public class Reservation implements Serializable {
     // relationships
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-    private Guest guest;
+    private Customer guest;
     
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
@@ -165,12 +165,12 @@ public class Reservation implements Serializable {
     }
 
 
-    public Guest getGuest() {
+    public Customer getGuest() {
         return guest;
     }
 
 
-    public void setGuest(Guest guest) {
+    public void setGuest(Customer guest) {
         this.guest = guest;
     }
 

@@ -16,93 +16,59 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 
+
 /**
  *
  * @author min
  */
+
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
 public class Guest implements Serializable {
 
+
     private static final long serialVersionUID = 1L;
-    @Id
+    @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long guestId;
     @Column(nullable = false, length = 64, unique = true)
     private String email;
-    @Column(nullable = false, length = 64)
-    private String username;
-    @Column(nullable = false, length = 64)
-    private String password;
-    @Column(nullable = false)
-    private boolean isLoggedIn;
     
     @OneToMany(mappedBy = "guest", cascade = {}, fetch = FetchType.LAZY)
     private List<Reservation> reservations;
 
     public Guest() {
     }
-    
-    
-    public Guest(List<Reservation> reservations) {
-        this.reservations = reservations;
-    }
 
-    public Guest(String email, String username, String password, boolean isLoggedIn) {
+    public Guest(String email) {
         this.email = email;
-        this.username = username;
-        this.password = password;
-        this.isLoggedIn = isLoggedIn;
+
     }
     
+    
+    /**
+     * @return the guestId
+     */
     public Long getGuestId() {
         return guestId;
     }
 
+    /**
+     * @param guestId the guestId to set
+     */
     public void setGuestId(Long guestId) {
         this.guestId = guestId;
     }
     
-
     public String getEmail() {
         return email;
     }
 
-
     public void setEmail(String email) {
         this.email = email;
     }
-
-
-    public String getUsername() {
-        return username;
-    }
-
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-
-    public String getPassword() {
-        return password;
-    }
-
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
     
-
-    public boolean isIsLoggedIn() {
-        return isLoggedIn;
-    }
-
-    public void setIsLoggedIn(boolean isLoggedIn) {
-        this.isLoggedIn = isLoggedIn;
-    }
-
-    public List<Reservation> getReservations() {
+        public List<Reservation> getReservations() {
         return reservations;
     }
 
@@ -111,10 +77,11 @@ public class Guest implements Serializable {
         this.reservations = reservations;
     }
 
+    
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (guestId != null ? guestId.hashCode() : 0);
+        hash += (getGuestId() != null ? getGuestId().hashCode() : 0);
         return hash;
     }
 
@@ -125,7 +92,7 @@ public class Guest implements Serializable {
             return false;
         }
         Guest other = (Guest) object;
-        if ((this.guestId == null && other.guestId != null) || (this.guestId != null && !this.guestId.equals(other.guestId))) {
+        if ((this.getGuestId() == null && other.getGuestId() != null) || (this.getGuestId() != null && !this.guestId.equals(other.guestId))) {
             return false;
         }
         return true;
@@ -133,7 +100,9 @@ public class Guest implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Guest[ id=" + guestId + " ]";
+        return "entity.Guest[ id=" + getGuestId() + " ]";
     }
-  
+
+
 }
+
