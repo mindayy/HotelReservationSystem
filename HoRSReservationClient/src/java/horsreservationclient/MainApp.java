@@ -13,7 +13,7 @@ import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Customer;
-import entity.Guest;
+import java.util.Arrays;
 import entity.Reservation;
 import entity.Room;
 import entity.RoomType;
@@ -21,7 +21,10 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 import java.util.Scanner;
+import util.exception.GuestNotFoundException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.ReservationNotFoundException;
+import util.exception.RoomNotAvailableException;
 
 /**
  *
@@ -237,7 +240,7 @@ class MainApp {
         if (response == 1)
         {   
             if (currentGuest != null  && currentGuest.isIsLoggedIn()) {
-                doReserveRoom();
+                doReserveRoom(checkInDate, checkOutDate, roomTypeId, availableRooms);
             }
             else {
                 System.out.println("You must be logged in to reserve a hotel room.");
@@ -249,10 +252,53 @@ class MainApp {
         }
     }
     
-    private void doReserveRoom() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    private void doReserveRoom(Date checkInDate, Date checkOutDate, Long roomTypeId, List<Room> availableRooms)  {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("*** Reserving a room ***\n");
 
+        System.out.println("Select Room ID from the available rooms: ");
+        for (Room room : availableRooms) {
+            System.out.println("Room ID: " + room.getRoomId() + " - Room Number: " + room.getRoomNumber());
+        }
+
+        System.out.print("Enter Room ID to reserve> ");
+        Long roomId = scanner.nextLong();
+
+        // Check if the selected room ID is valid
+        boolean roomExists = availableRooms.stream().anyMatch(room -> room.getRoomId().equals(roomId));
+        if (!roomExists) {
+            System.out.println("Invalid Room ID. Please try again.");
+            return;
+        }
+
+        // Proceed with the reservation using the session bean
+        try {
+        
+            Reservation newReservation = reservationSessionBeanRemote.reserveRoom(
+                currentGuest.getGuestId(), 
+                Arrays.asList(roomId), 
+                checkInDate, 
+                checkOutDate
+            );
+
+            System.out.println("Reservation successful! Reservation ID: " + newReservation.getReservationId());
+            System.out.println("Check-In Date: " + checkInDate);
+            System.out.println("Check-Out Date: " + checkOutDate);
+
+        } catch (GuestNotFoundException e) {
+            // Handle the exception, for example, inform the user that the guest was not found
+            System.out.println("Error: Guest not found. Please verify the guest details.");
+        } catch (ReservationNotFoundException e) {
+            // Handle the exception (for example, print an error message)
+            System.out.println("Error: Reservation not found. Please check the reservation details.");
+        } catch (RoomNotAvailableException e) {
+        // Handle the exception (e.g., inform the user that the room is not available)
+            System.out.println("Error: The room is not available for the selected dates. Please choose a different room.");
+        }
+
+    }
+        
+        
     private void viewMyReservationDetails() {
         
         Scanner scanner = new Scanner(System.in);
