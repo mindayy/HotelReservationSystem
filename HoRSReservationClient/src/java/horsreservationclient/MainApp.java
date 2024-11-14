@@ -78,8 +78,6 @@ class MainApp {
                     try
                     {
                         doLogin();
-                        System.out.println("Login successful!\n");
-                        
                         menuMain();
                     }
                     catch(InvalidLoginCredentialException ex) 
@@ -203,9 +201,18 @@ class MainApp {
         if (availableRooms.isEmpty()) {
             System.out.println("No rooms available for the specified dates.\n");
         } else {
+            System.out.println("Available Rooms: ");
             for (Room room : availableRooms) {
                 System.out.println("Room ID: " + room.getRoomId() + ", Room Type: " + room.getRoomType().getName());
             }
         }
+    }
+
+    private void viewMyReservationDetails() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void viewAllMyReservations() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

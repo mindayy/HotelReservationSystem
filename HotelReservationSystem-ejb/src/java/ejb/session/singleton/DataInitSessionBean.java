@@ -43,7 +43,7 @@ public class DataInitSessionBean {
         createRoomType("Grand Suite", null, "Luxurious and spacious", 70, "Two Kings", 4, "TV, free minibar"); 
         createRoomType("Junior Suite", "Grand Suite", "Stylish with a living area", 50, "Two Kings", 4, "TV, free minibar");
         createRoomType("Family Room", "Junior Suite", "Ideal for families", 45, "King + Queen", 4, "TV, minibar");
-        createRoomType("Premier Room", "Family Room", "Spacious with upgraded amenities", 35, "King", 2, "TV, free minibar");
+        createRoomType("Premier Room", "Family Room", "Spacious ", 35, "King", 2, "TV, free minibar");
         createRoomType("Deluxe Room", "Premier Room", "Comfortable and modern", 25, "Queen", 2, "TV, minibar");
 
         // Initialize Room Rates

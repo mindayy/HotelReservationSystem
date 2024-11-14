@@ -115,7 +115,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         return newReservation;
     }
 
-// Helper method to get the applicable room rate based on the date
+    // Helper method to get the applicable room rate based on the date
     private BigDecimal getApplicableRoomRate(Long roomTypeId, Date checkInDate, Date checkOutDate) {
         List<RoomRate> roomRates = roomRateSessionBean.getRoomRatesForRoomType(roomTypeId, checkInDate, checkOutDate);
 

@@ -34,6 +34,7 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
     public Long registerGuest(String email, String username, String password) {
         Customer guest = new Customer(email, username, password, false);
         em.persist(guest);
+        em.flush();
         return guest.getGuestId();
     }
     
