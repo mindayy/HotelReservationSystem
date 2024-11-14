@@ -150,7 +150,7 @@ class MainApp {
                     viewAllMyReservations();
                     break;
                 case 4:
-                    return; // Exit guest menu
+                    break; // Exit guest menu
                 default:
                     System.out.println("Invalid option, please try again.");
             }
