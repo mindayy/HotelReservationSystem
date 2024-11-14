@@ -33,5 +33,7 @@ public interface RoomRateSessionBeanLocal {
     public Long getRoomTypeIdForRoomRate(Long roomRateId) throws RoomRateNotFoundException;
 
     public void updateRoomRate(RoomRate roomRate, String name, Long newRoomTypeId, BigDecimal newRatePerNight, RateTypeEnum newRateType, Date startDate, Date endDate);
+
+    public List<BigDecimal> getRoomRatePerNightFromRoomType(Long roomTypeId);
     
 }
