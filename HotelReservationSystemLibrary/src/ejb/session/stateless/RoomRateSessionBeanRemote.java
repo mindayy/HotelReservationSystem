@@ -33,5 +33,5 @@ public interface RoomRateSessionBeanRemote {
     
     public void updateRoomRate(RoomRate roomRate, String name, Long newRoomTypeId, BigDecimal newRatePerNight, RateTypeEnum newRateType, Date startDate, Date endDate);
     
-    public List<BigDecimal> getRoomRatePerNightFromRoomType(Long roomTypeId);
+    public List<RoomRate> getRoomRatesForRoomType(Long roomTypeId, Date checkInDate, Date checkOutDate);
 }
