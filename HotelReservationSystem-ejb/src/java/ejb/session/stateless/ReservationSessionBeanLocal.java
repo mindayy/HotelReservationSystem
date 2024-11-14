@@ -30,6 +30,8 @@ public interface ReservationSessionBeanLocal {
 
     public BigDecimal reservationAmt(Long roomTypeId, Date checkInDate, Date checkOutDate);
     
+    public List<Reservation> getAllReservationsForCustomer(Long customerId);
     
+    public Reservation getReservationDetails(Long reservationId) throws ReservationNotFoundException;
     
 }

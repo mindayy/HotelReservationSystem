@@ -21,6 +21,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import util.exception.GuestNotFoundException;
 import util.exception.ReservationNotFoundException;
 import util.exception.RoomNotAvailableException;
@@ -83,6 +84,23 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         // Calculate total amount for this room
         totalAmount = totalAmount.add(roomRatePerNight.multiply(new BigDecimal(numNights)));
         return totalAmount;
+    }
+    
+    @Override
+    public List<Reservation> getAllReservationsForCustomer(Long customerId) {
+        TypedQuery<Reservation> query = em.createQuery(
+            "SELECT r FROM Reservation r WHERE r.guest.guestId = :customerId", Reservation.class);
+        query.setParameter("customerId", customerId);
+        return query.getResultList();
+    }
+    
+    @Override
+    public Reservation getReservationDetails(Long reservationId) throws ReservationNotFoundException {
+        Reservation reservation = em.find(Reservation.class, reservationId);
+        if (reservation == null) {
+            throw new ReservationNotFoundException("Reservation with ID " + reservationId + " not found.");
+        }
+        return reservation;
     }
     
     @Override

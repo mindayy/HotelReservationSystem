@@ -14,6 +14,7 @@ import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Customer;
 import entity.Guest;
+import entity.Reservation;
 import entity.Room;
 import entity.RoomType;
 import java.math.BigDecimal;
@@ -214,10 +215,63 @@ class MainApp {
     }
 
     private void viewMyReservationDetails() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("*** Hotel Reservation System :: View Reservation Details ***\n");
+
+        System.out.print("Enter Reservation ID> ");
+        Long reservationId = scanner.nextLong();
+
+        try {
+            // Retrieve reservation details based on the reservation ID
+            Reservation reservation = reservationSessionBeanRemote.getReservationDetails(reservationId);
+
+            if (reservation == null) {
+                System.out.println("Reservation with ID " + reservationId + " not found.\n");
+            } else {
+                System.out.println("Reservation Details: ");
+                System.out.println("Reservation ID: " + reservation.getReservationId());
+                System.out.println("Check-In Date: " + reservation.getCheckInDate());
+                System.out.println("Check-Out Date: " + reservation.getCheckOutDate());
+                System.out.println("Room Type: " + reservation.getRoomType().getName());
+                System.out.println("Total Amount: $" + reservation.getReservationAmt());
+            }
+
+        } catch (Exception ex) {
+            System.out.println("An error occurred while retrieving the reservation details: " + ex.getMessage() + "\n");
+        }
     }
 
     private void viewAllMyReservations() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("*** Hotel Reservation System :: View All My Reservations ***\n");
+
+        try {
+            // Assume customerId is available from the logged-in customer
+            Long customerId = currentGuest.getGuestId(); 
+
+            // Retrieve all reservations for the logged-in customer
+            List<Reservation> reservations = reservationSessionBeanRemote.getAllReservationsForCustomer(customerId);
+
+            if (reservations.isEmpty()) {
+                System.out.println("You have no reservations.\n");
+            } else {
+                System.out.printf("%-10s %-20s %-20s %-20s %-10s\n", "Reservation ID", "Check-In Date", "Check-Out Date", "Room Type", "Total Amount");
+
+                for (Reservation reservation : reservations) {
+                    // Display basic reservation information
+                    System.out.printf("%-10s %-20s %-20s %-20s %-10s\n",
+                            reservation.getReservationId(),
+                            reservation.getCheckInDate().toString(),
+                            reservation.getCheckOutDate().toString(),
+                            reservation.getRoomType().getName(),
+                            reservation.getReservationAmt());
+                }
+            }
+
+        } catch (Exception ex) {
+            System.out.println("An error occurred while retrieving your reservations: " + ex.getMessage() + "\n");
+        }
     }
+
 }

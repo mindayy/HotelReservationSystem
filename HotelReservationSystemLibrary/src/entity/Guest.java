@@ -46,9 +46,6 @@ public class Guest implements Serializable {
     }
     
     
-    /**
-     * @return the guestId
-     */
     public Long getGuestId() {
         return guestId;
     }
