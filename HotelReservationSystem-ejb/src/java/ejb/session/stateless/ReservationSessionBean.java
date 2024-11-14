@@ -8,6 +8,7 @@ import entity.Guest;
 import entity.Reservation;
 import entity.ReservationRoom;
 import entity.Room;
+import entity.RoomRate;
 import enums.ReservationStatus;
 import static enums.ReservationStatus.CHECKEDIN;
 import static enums.ReservationStatus.CHECKEDOUT;
@@ -36,6 +37,9 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     
     @EJB
     private ReservationRoomSessionBeanLocal reservationRoomSessionBean;
+    
+    @EJB
+    private RoomRateSessionBeanLocal roomRateSessionBean;
     
     @Override
     public void checkInGuest(Long reservationId) throws ReservationNotFoundException {
@@ -67,9 +71,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     }
     
     @Override
-
-    public Reservation reserveRoom(Long guestId, List<Long> roomIds, Date checkInDate, Date checkOutDate) 
-            throws GuestNotFoundException, ReservationNotFoundException, RoomNotAvailableException {
+    public Reservation reserveRoom(Long guestId, List<Long> roomIds, Date checkInDate, Date checkOutDate) throws GuestNotFoundException, RoomNotAvailableException, ReservationNotFoundException {
         Guest guest = em.find(Guest.class, guestId);
         if (guest == null) {
             throw new GuestNotFoundException("Guest ID " + guestId + " does not exist.");
@@ -84,17 +86,23 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
 
         // For each room, check availability and create reservation room entry
         for (Long roomId : roomIds) {
-            // Declare that the method can throw RoomNotAvailableException
             ReservationRoom reservationRoom = reservationRoomSessionBean.reserveRoom(roomId, newReservation, checkInDate, checkOutDate);
 
-            // Calculate the total amount based on the room rate and stay duration
+            // Fetch the room details
             Room room = reservationRoom.getRoom();
-            BigDecimal roomRate = room.getRoomType().getCurrentRoomRate();
+            Long roomTypeId = room.getRoomType().getRoomTypeId();
+
+            // Retrieve room rate based on the room type and date
+            BigDecimal roomRatePerNight = getApplicableRoomRate(roomTypeId, checkInDate, checkOutDate);
+
+            // Calculate the number of nights
             long numNights = (checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24);
-            totalAmount = totalAmount.add(roomRate.multiply(new BigDecimal(numNights)));
+
+            // Calculate total amount for this room
+            totalAmount = totalAmount.add(roomRatePerNight.multiply(new BigDecimal(numNights)));
         }
 
-        newReservation.setTotalAmount(totalAmount);
+        newReservation.setReservationAmt(totalAmount);
 
         Calendar cal = Calendar.getInstance();
         if (checkInDate.equals(new Date()) && cal.get(Calendar.HOUR_OF_DAY) >= 2) {
@@ -105,6 +113,40 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
 
         em.persist(newReservation); // Persist the reservation
         return newReservation;
+    }
+
+// Helper method to get the applicable room rate based on the date
+    private BigDecimal getApplicableRoomRate(Long roomTypeId, Date checkInDate, Date checkOutDate) {
+        List<RoomRate> roomRates = roomRateSessionBean.getRoomRatesForRoomType(roomTypeId, checkInDate, checkOutDate);
+
+        RoomRate promotionRate = null;
+        RoomRate peakRate = null;
+        RoomRate normalRate = null;
+
+        for (RoomRate rate : roomRates) {
+            switch (rate.getRateType()) {
+                case PROMOTION:
+                    promotionRate = rate;
+                    break;
+                case PEAK:
+                    peakRate = rate;
+                    break;
+                case NORMAL:
+                    normalRate = rate;
+                    break;
+            }
+        }
+
+        // Determine the applicable rate:
+        if (promotionRate != null) {
+            return promotionRate.getRatePerNight(); // Promotion rate takes precedence
+        } else if (peakRate != null) {
+            return peakRate.getRatePerNight(); // Peak rate takes precedence over normal
+        } else if (normalRate != null) {
+            return normalRate.getRatePerNight(); // Fallback to normal rate
+        } else {
+            throw new IllegalStateException("No rate defined for room type " + roomTypeId + " on the selected dates.");
+        }
     }
 
 }
