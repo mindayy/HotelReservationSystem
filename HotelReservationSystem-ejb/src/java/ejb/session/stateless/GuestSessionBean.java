@@ -31,9 +31,10 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
     }
 
     @Override
-    public void registerGuest(String email, String username, String password) {
+    public Long registerGuest(String email, String username, String password) {
         Customer guest = new Customer(email, username, password, false);
         em.persist(guest);
+        return guest.getGuestId();
     }
     
     @Override

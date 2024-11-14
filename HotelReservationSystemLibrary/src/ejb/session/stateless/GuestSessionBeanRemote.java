@@ -17,7 +17,7 @@ import util.exception.InvalidLoginCredentialException;
 @Remote
 public interface GuestSessionBeanRemote {
     
-    public void registerGuest(String email, String username, String password);
+    public Long registerGuest(String email, String username, String password);
     
     public Guest retrieveGuestById(Long guestId) throws GuestNotFoundException;
     

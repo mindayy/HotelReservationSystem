@@ -4,7 +4,14 @@
  */
 package ejb.session.stateless;
 
+import entity.Reservation;
+import entity.ReservationRoom;
+import entity.Room;
+import java.util.Date;
+import java.util.List;
 import javax.ejb.Remote;
+import util.exception.ReservationNotFoundException;
+import util.exception.RoomNotAvailableException;
 
 /**
  *
@@ -12,5 +19,8 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface ReservationRoomSessionBeanRemote {
+    public List<Room> searchAvailableRooms(Date checkInDate, Date checkOutDate, Long roomTypeId);
+    
+    public ReservationRoom reserveRoom(Long roomId, Reservation reservation, Date checkInDate, Date checkOutDate) throws RoomNotAvailableException, ReservationNotFoundException;
     
 }
