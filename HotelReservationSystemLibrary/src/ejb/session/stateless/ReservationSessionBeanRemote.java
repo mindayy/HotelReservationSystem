@@ -4,8 +4,15 @@
  */
 package ejb.session.stateless;
 
+import entity.Reservation;
+import entity.RoomType;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 import javax.ejb.Remote;
+import util.exception.GuestNotFoundException;
 import util.exception.ReservationNotFoundException;
+import util.exception.RoomNotAvailableException;
 
 /**
  *
@@ -17,5 +24,10 @@ public interface ReservationSessionBeanRemote {
     public void checkInGuest(Long reservationId) throws ReservationNotFoundException;
     
     public void checkOutGuest(Long reservationId) throws ReservationNotFoundException;
+    
+    public Reservation reserveRoom(Long guestId, List<Long> roomIds, Date checkInDate, Date checkOutDate) 
+            throws GuestNotFoundException, ReservationNotFoundException, RoomNotAvailableException;
+
+    public BigDecimal reservationAmt(Long roomTypeId, Date checkInDate, Date checkOutDate);
     
 }

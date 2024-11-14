@@ -9,6 +9,7 @@ import entity.Reservation;
 import entity.ReservationRoom;
 import entity.Room;
 import entity.RoomRate;
+import entity.RoomType;
 import enums.ReservationStatus;
 import static enums.ReservationStatus.CHECKEDIN;
 import static enums.ReservationStatus.CHECKEDOUT;
@@ -68,6 +69,20 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         }
         reservation.setReservationStatus(CHECKEDOUT);
         em.merge(reservation);
+    }
+    
+    @Override
+    public BigDecimal reservationAmt(Long roomTypeId, Date checkInDate, Date checkOutDate) {
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        // Retrieve room rate based on the room type and date
+        BigDecimal roomRatePerNight = getApplicableRoomRate(roomTypeId, checkInDate, checkOutDate);
+
+        // Calculate the number of nights
+        long numNights = (checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24);
+
+        // Calculate total amount for this room
+        totalAmount = totalAmount.add(roomRatePerNight.multiply(new BigDecimal(numNights)));
+        return totalAmount;
     }
     
     @Override

@@ -141,16 +141,18 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
     
     @Override
     public List<RoomRate> getRoomRatesForRoomType(Long roomTypeId, Date checkInDate, Date checkOutDate) {
-        // Query to retrieve the room rates based on room type and the provided date range
-        Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomType.roomTypeId = :roomTypeId "
-                + "AND rr.startDate <= :checkOutDate AND rr.endDate >= :checkInDate");
-        
-        query.setParameter("roomTypeId", roomTypeId);
-        query.setParameter("checkInDate", checkInDate);
-        query.setParameter("checkOutDate", checkOutDate);
-        
-        // Return the list of room rates for the specified room type and date range
-        return query.getResultList();
+    // Query to retrieve the room rates based on room type and the provided date range, 
+    // including rates where validFrom and validTo are null
+    Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomType.roomTypeId = :roomTypeId "
+            + "AND ((rr.validFrom IS NULL AND rr.validTo IS NULL) "
+            + "OR (rr.validFrom <= :checkOutDate AND rr.validTo >= :checkInDate))");
+
+    query.setParameter("roomTypeId", roomTypeId);
+    query.setParameter("checkInDate", checkInDate);
+    query.setParameter("checkOutDate", checkOutDate);
+
+    // Return the list of room rates for the specified room type and date range
+    return query.getResultList();
     }
     
 }

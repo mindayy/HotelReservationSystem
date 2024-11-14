@@ -16,6 +16,7 @@ import entity.Customer;
 import entity.Guest;
 import entity.Room;
 import entity.RoomType;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -203,9 +204,13 @@ class MainApp {
         } else {
             System.out.println("Available Rooms: ");
             for (Room room : availableRooms) {
-                System.out.println("Room ID: " + room.getRoomId() + ", Room Type: " + room.getRoomType().getName());
+                System.out.println("Room ID: " + room.getRoomId() + "Room Number: " + room.getRoomNumber() + ", Room Type: " + room.getRoomType().getName());
             }
+            BigDecimal reservationAmt = reservationSessionBeanRemote.reservationAmt(roomTypeId, checkInDate, checkOutDate);
+            System.out.println("Reservation Amount: $" + reservationAmt);
+            
         }
+        
     }
 
     private void viewMyReservationDetails() {

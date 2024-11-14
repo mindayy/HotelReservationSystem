@@ -5,6 +5,8 @@
 package ejb.session.stateless;
 
 import entity.Reservation;
+import entity.RoomType;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
@@ -25,6 +27,8 @@ public interface ReservationSessionBeanLocal {
     
     public Reservation reserveRoom(Long guestId, List<Long> roomIds, Date checkInDate, Date checkOutDate) 
             throws GuestNotFoundException, ReservationNotFoundException, RoomNotAvailableException;
+
+    public BigDecimal reservationAmt(Long roomTypeId, Date checkInDate, Date checkOutDate);
     
     
     
