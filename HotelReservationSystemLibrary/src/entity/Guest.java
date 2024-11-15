@@ -6,6 +6,7 @@ package entity;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -34,7 +35,7 @@ public class Guest implements Serializable {
     @Column(nullable = false, length = 64, unique = true)
     private String email;
     
-    @OneToMany(mappedBy = "guest", cascade = {}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "guest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Reservation> reservations;
 
     public Guest() {

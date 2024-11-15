@@ -55,16 +55,21 @@ public class HotelOperationModule {
     
 
     void menuHotelOperation() throws InvalidAccessRightException {
-        if (currentEmployee.getRole() != RoleEnum.OperationManager && currentEmployee.getRole() != RoleEnum.SalesManager) {
+        if (currentEmployee.getRole() == RoleEnum.OperationManager) {
+            displayOperationManagerMenu();
+        } else if (currentEmployee.getRole() == RoleEnum.SalesManager) {
+            displaySalesManagerMenu();
+        } else {
             throw new InvalidAccessRightException("You do not have the rights to access the Hotel Operation Module.");
         }
+    }
     
+    private void displayOperationManagerMenu() {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
-        
-        while(true)
-        {
-            System.out.println("*** Hotel Reservation System :: Hotel Operation ***\n");
+
+        while (true) {
+            System.out.println("*** Hotel Reservation System :: Hotel Operation (Operation Manager) ***\n");
             System.out.println("1: Create New Room Type");
             System.out.println("2: View Room Type Details");
             System.out.println("3: View All Room Types");
@@ -75,79 +80,76 @@ public class HotelOperationModule {
             System.out.println("7: View All Rooms");
             System.out.println("8: View Room Allocation Exception Report");
             System.out.println("-----------------------");
-            System.out.println("9: Create New Room Rate");
-            System.out.println("10: View Room Rate Details");
-            System.out.println("11: View All Room Rates");
-            System.out.println("-----------------------");
-            System.out.println("12: Back\n");
+            System.out.println("9: Back\n");
             response = 0;
-            
-            while(response < 1 || response > 12)
-            {
-                System.out.print("> ");
 
+            while (response < 1 || response > 9) {
+                System.out.print("> ");
                 response = scanner.nextInt();
 
-                if(response == 1)
-                {
+                if (response == 1) {
                     doCreateNewRoomType();
-                }
-                else if(response == 2)
-                {
+                } else if (response == 2) {
                     doViewRoomTypeDetails();
-                }
-                else if(response == 3)
-                {
+                } else if (response == 3) {
                     doViewAllRoomTypes();
-                }
-                else if(response == 4)
-                {
+                } else if (response == 4) {
                     doCreateNewRoom();
-                }
-                else if (response == 5)
-                {
+                } else if (response == 5) {
                     doUpdateRoom();
-                }
-                else if(response == 6)
-                {
+                } else if (response == 6) {
                     doDeleteRoom();
-                }
-                else if(response == 7)
-                {
+                } else if (response == 7) {
                     doViewAllRooms();
-                }
-                else if(response == 18)
-                {
+                } else if (response == 8) {
                     doViewAllRoomAllocationExceptionReport();
-                }
-                else if(response == 9)
-                {
-                    doCreateNewRoomRate();
-                }
-                else if(response == 10)
-                {
-                    doViewRoomRateDetails();
-                }
-                else if(response == 11)
-                {
-                    doViewAllRoomRates();
-                }
-                else if(response == 12)
-                {
+                } else if (response == 9) {
                     break;
-                }
-                else
-                {
-                    System.out.println("Invalid option, please try again!\n");                
+                } else {
+                    System.out.println("Invalid option, please try again!\n");
                 }
             }
-            
-            if(response == 12)
-            {
+
+            if (response == 9) {
                 break;
             }
         }
-    }
+    }   
+
+    private void displaySalesManagerMenu() {
+        Scanner scanner = new Scanner(System.in);
+        Integer response = 0;
+
+        while (true) {
+            System.out.println("*** Hotel Reservation System :: Hotel Operation (Sales Manager) ***\n");
+            System.out.println("1: Create New Room Rate");
+            System.out.println("2: View Room Rate Details");
+            System.out.println("3: View All Room Rates");
+            System.out.println("4: Back\n");
+            response = 0;
+
+            while (response < 1 || response > 4) {
+                System.out.print("> ");
+                response = scanner.nextInt();
+
+                if (response == 1) {
+                    doCreateNewRoomRate();
+                } else if (response == 2) {
+                    doViewRoomRateDetails();
+                } else if (response == 3) {
+                    doViewAllRoomRates();
+                } else if (response == 4) {
+                    break;
+                } else {
+                    System.out.println("Invalid option, please try again!\n");
+                }
+            }
+
+            if (response == 4) {
+                break;
+            }
+        }
+    }  
 
     private void doCreateNewRoomType() {
         Scanner scanner = new Scanner(System.in);
@@ -177,7 +179,7 @@ public class HotelOperationModule {
         {
         System.out.printf("%-12s %-20s\n", existingRoomType.getRoomTypeId(), existingRoomType.getName());
         }
-        
+        System.out.printf("Enter 'N' if no Next Higher Room Type");
         System.out.print("Enter Next Higher Room Type Id> ");
         Long nextHigherRoomTypeId = scanner.nextLong();
         scanner.nextLine();
@@ -520,7 +522,7 @@ public class HotelOperationModule {
 
     private void doUpdateRoomRate(RoomRate roomRate) {
         Scanner scanner = new Scanner(System.in);        
-        String input;
+        String input = null;
         Long roomTypeId = null;
         BigDecimal ratePerNight = null;
         RateTypeEnum rateType = null;
@@ -531,12 +533,22 @@ public class HotelOperationModule {
         // name, rate type, rate per night, validfrom, validto, roomtypeid
         System.out.println("*** Hotel Reservation System :: Hotel Operation :: View Room Rate Details :: Update Room Rate ***\n");
         System.out.print("Enter Name (blank if no change)> ");
-        name = scanner.nextLine().trim();
+        input = scanner.nextLine().trim();
+        if (input.length() > 0) {
+            name = input;
+        } else {
+            name = roomRate.getRoomRateName();
+        }
+        
         
                 
         System.out.print("Enter Rate Per Night(blank if no change)> ");
         input = scanner.nextLine().trim();
+        if (input.length() > 0) {
         ratePerNight = new BigDecimal(input);
+        } else {
+            ratePerNight = roomRate.getRatePerNight();
+        }
 
         
         System.out.print("Enter Room Type Id (blank if no change)> ");
@@ -559,7 +571,7 @@ public class HotelOperationModule {
         if (input.length() > 0) {
             try {
                 Integer rateTypeInt = Integer.parseInt(input);
-                roomRate.setRateType(RateTypeEnum.values()[rateTypeInt - 1]);
+                rateType = RateTypeEnum.values()[rateTypeInt - 1];
             } catch (NumberFormatException ex) {
                 System.out.println("Invalid option, please try again!");
             }
@@ -569,18 +581,22 @@ public class HotelOperationModule {
         
         
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        if (roomRate.getRateType() == RateTypeEnum.PEAK || roomRate.getRateType() == RateTypeEnum.PROMOTION) {
+        if (rateType == RateTypeEnum.PEAK || rateType == RateTypeEnum.PROMOTION) {
             try {
-               System.out.print("Enter Room Rate Start Date (yyyy-MM-dd) (blank if no change)> ");
-               String startDateInput = scanner.nextLine().trim();
-               if(startDateInput.length() > 0) {
+                System.out.print("Enter Room Rate Start Date (yyyy-MM-dd) (blank if no change)> ");
+                String startDateInput = scanner.nextLine().trim();
+                if(startDateInput.length() > 0) {
                     startDate = dateFormat.parse(startDateInput); // Convert String to Date
-               }
-               System.out.print("Enter Room Rate End Date (yyyy-MM-dd) (blank if no change)> ");
-               String endDateInput = scanner.nextLine().trim();
-               if(endDateInput.length() > 0) {
-                    endDate = dateFormat.parse(endDateInput); // Convert String to Date
-               }
+                } else {
+                startDate = roomRate.getValidFrom();
+                }
+                System.out.print("Enter Room Rate End Date (yyyy-MM-dd) (blank if no change)> ");
+                String endDateInput = scanner.nextLine().trim();
+                if(endDateInput.length() > 0) {
+                     endDate = dateFormat.parse(endDateInput); // Convert String to Date
+                } else {
+                endDate = roomRate.getValidTo();
+                }
             } catch (ParseException ex) {
                System.out.println("Please enter a valid Date! \n");
             }
