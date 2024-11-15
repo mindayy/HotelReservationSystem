@@ -75,7 +75,7 @@ public class Reservation implements Serializable {
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<ReservationRoom> reservationRooms;
     
-    @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, cascade = {}, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false)
     private RoomType roomType;
     

@@ -145,6 +145,7 @@ class MainApp {
                 System.out.print("> ");
                 try {
                     choice = scanner.nextInt();
+                    scanner.nextLine();
                 } catch (InputMismatchException e) {
                     System.out.println("Please enter a valid number.");
                     scanner.next();  // Clear the invalid input
@@ -159,10 +160,13 @@ class MainApp {
                     viewAllMyReservations();
                 } else if (choice == 4) {
                     System.out.println("Exiting...");
-                    return;  // Exit the menuMain method
+                    break;  // Exit the menuMain method
                 } else {
                     System.out.println("Invalid option, please try again.");
                 }
+            }
+            if (choice == 4) {
+                break;
             }
         }
     }
@@ -348,11 +352,11 @@ class MainApp {
             if (reservations.isEmpty()) {
                 System.out.println("You have no reservations.\n");
             } else {
-                System.out.printf("%-10s %-20s %-20s %-20s %-10s\n", "Reservation ID", "Check-In Date", "Check-Out Date", "Room Type", "Total Amount");
+                System.out.printf("%-10s %-40s %-40s %-20s %-10s\n", "Reservation ID", "Check-In Date", "Check-Out Date", "Room Type", "Total Amount");
 
                 for (Reservation reservation : reservations) {
                     // Display basic reservation information
-                    System.out.printf("%-10s %-20s %-20s %-20s %-10s\n",
+                    System.out.printf("%-10s %-40s %-40s %-20s %-10s\n",
                             reservation.getReservationId(),
                             reservation.getCheckInDate().toString(),
                             reservation.getCheckOutDate().toString(),
