@@ -25,8 +25,7 @@ public interface ReservationSessionBeanRemote {
     
     public void checkOutGuest(Long reservationId) throws ReservationNotFoundException;
     
-    public Reservation reserveRoom(Long guestId, List<Long> roomIds, Date checkInDate, Date checkOutDate) 
-            throws GuestNotFoundException, ReservationNotFoundException, RoomNotAvailableException;
+    public Reservation reserveRoom(Long guestId, Long roomId, Date checkInDate, Date checkOutDate) throws GuestNotFoundException, RoomNotAvailableException, ReservationNotFoundException;
 
     public BigDecimal reservationAmt(Long roomTypeId, Date checkInDate, Date checkOutDate);
     

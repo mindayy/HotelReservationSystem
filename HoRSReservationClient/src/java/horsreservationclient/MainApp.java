@@ -19,6 +19,7 @@ import entity.Room;
 import entity.RoomType;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import util.exception.GuestNotFoundException;
@@ -131,28 +132,37 @@ class MainApp {
 
     private void menuMain() {
         Scanner scanner = new Scanner(System.in);
+        Integer choice;
+
         while (true) {
             System.out.println("1: Search Hotel Room");
             System.out.println("2: View My Reservation Details");
             System.out.println("3: View All My Reservations");
             System.out.println("4: Exit");
-            System.out.print("> ");
-            int choice = scanner.nextInt();
-            
-            switch (choice) {
-                case 1:
+
+            choice = 0;  // Reset choice for each loop iteration
+            while (choice < 1 || choice > 4) {
+                System.out.print("> ");
+                try {
+                    choice = scanner.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("Please enter a valid number.");
+                    scanner.next();  // Clear the invalid input
+                    continue;
+                }
+
+                if (choice == 1) {
                     doSearchHotelRoom();
-                    break;
-                case 2:
+                } else if (choice == 2) {
                     viewMyReservationDetails();
-                    break;
-                case 3:
+                } else if (choice == 3) {
                     viewAllMyReservations();
-                    break;
-                case 4:
-                    break; // Exit guest menu
-                default:
+                } else if (choice == 4) {
+                    System.out.println("Exiting...");
+                    return;  // Exit the menuMain method
+                } else {
                     System.out.println("Invalid option, please try again.");
+                }
             }
         }
     }
@@ -245,11 +255,8 @@ class MainApp {
             else {
                 System.out.println("You must be logged in to reserve a hotel room.");
             }
-        } else if (response == 2) {
-            return;
-        } else {
-            System.out.println("Invalid option. Please try again.");
-        }
+
+        } 
     }
     
     private void doReserveRoom(Date checkInDate, Date checkOutDate, Long roomTypeId, List<Room> availableRooms)  {
@@ -276,7 +283,7 @@ class MainApp {
         
             Reservation newReservation = reservationSessionBeanRemote.reserveRoom(
                 currentGuest.getGuestId(), 
-                Arrays.asList(roomId), 
+                roomId, 
                 checkInDate, 
                 checkOutDate
             );

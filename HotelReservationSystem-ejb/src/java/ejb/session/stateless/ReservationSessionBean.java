@@ -13,6 +13,8 @@ import entity.RoomType;
 import enums.ReservationStatus;
 import static enums.ReservationStatus.CHECKEDIN;
 import static enums.ReservationStatus.CHECKEDOUT;
+import enums.RoomStatusEnum;
+import static java.lang.Boolean.FALSE;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
@@ -104,37 +106,36 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     }
     
     @Override
-    public Reservation reserveRoom(Long guestId, List<Long> roomIds, Date checkInDate, Date checkOutDate) throws GuestNotFoundException, RoomNotAvailableException, ReservationNotFoundException {
+    public Reservation reserveRoom(Long guestId, Long roomId, Date checkInDate, Date checkOutDate) throws GuestNotFoundException, RoomNotAvailableException, ReservationNotFoundException {
         Customer guest = em.find(Customer.class, guestId);
+        Room room = em.find(Room.class, roomId);
         if (guest == null) {
             throw new GuestNotFoundException("Guest ID " + guestId + " does not exist.");
         }
-
+        if (room.getRoomStatus() != RoomStatusEnum.AVAILABLE) {
+            throw new RoomNotAvailableException("Room ID " + roomId + " is not available.");
+        }
+        
         Reservation newReservation = new Reservation();
         newReservation.setGuest(guest);
         newReservation.setCheckInDate(checkInDate);
         newReservation.setCheckOutDate(checkOutDate);
+        newReservation.setRoomType(room.getRoomType());
+        newReservation.setReservationStatus(ReservationStatus.RESERVED);
 
-        BigDecimal totalAmount = BigDecimal.ZERO;
+        // Create and set ReservationRoom
+        ReservationRoom reservationRoom = new ReservationRoom();
+        reservationRoom.setRoom(room);
+        reservationRoom.setReservedFrom(checkInDate);
+        reservationRoom.setReservedTo(checkOutDate);
+        reservationRoom.setRoomAllocated(FALSE);
+        reservationRoom.setReservation(newReservation);
+        
+        newReservation.getReservationRooms().add(reservationRoom);
+        
 
-        // For each room, check availability and create reservation room entry
-        for (Long roomId : roomIds) {
-            ReservationRoom reservationRoom = reservationRoomSessionBean.reserveRoom(roomId, newReservation, checkInDate, checkOutDate);
 
-            // Fetch the room details
-            Room room = reservationRoom.getRoom();
-            Long roomTypeId = room.getRoomType().getRoomTypeId();
-
-            // Retrieve room rate based on the room type and date
-            BigDecimal roomRatePerNight = getApplicableRoomRate(roomTypeId, checkInDate, checkOutDate);
-
-            // Calculate the number of nights
-            long numNights = (checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24);
-
-            // Calculate total amount for this room
-            totalAmount = totalAmount.add(roomRatePerNight.multiply(new BigDecimal(numNights)));
-        }
-
+        BigDecimal totalAmount = reservationAmt(room.getRoomType().getRoomTypeId(), checkInDate, checkOutDate); // Assuming this method exists
         newReservation.setReservationAmt(totalAmount);
 
         Calendar cal = Calendar.getInstance();

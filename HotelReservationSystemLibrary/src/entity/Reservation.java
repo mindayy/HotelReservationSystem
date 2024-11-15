@@ -33,6 +33,20 @@ import javax.persistence.TemporalType;
 @Entity
 public class Reservation implements Serializable {
 
+    /**
+     * @return the reservationRooms
+     */
+    public List<ReservationRoom> getReservationRooms() {
+        return reservationRooms;
+    }
+
+    /**
+     * @param reservationRooms the reservationRooms to set
+     */
+    public void setReservationRooms(List<ReservationRoom> reservationRooms) {
+        this.reservationRooms = reservationRooms;
+    }
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,11 +68,11 @@ public class Reservation implements Serializable {
     @JoinColumn(nullable = false)
     private Guest guest;
     
-    @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = true)
     private Partner partner;
     
-    @OneToMany(mappedBy = "reservation", cascade = {}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<ReservationRoom> reservationRooms;
     
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
@@ -187,12 +201,12 @@ public class Reservation implements Serializable {
 
 
     public List<ReservationRoom> getReserveRooms() {
-        return reservationRooms;
+        return getReservationRooms();
     }
 
 
     public void setReserveRooms(List<ReservationRoom> reservationRooms) {
-        this.reservationRooms = reservationRooms;
+        this.setReservationRooms(reservationRooms);
     }
 
 
