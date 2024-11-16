@@ -30,5 +30,6 @@ public interface GuestSessionBeanLocal {
     
     public List<Reservation> viewAllMyReservations(Long guestId);
     
+    public Guest createNewGuest(Guest newGuest);
     
 }

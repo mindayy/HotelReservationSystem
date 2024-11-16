@@ -87,16 +87,7 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
         return reservation;
     }
 
-    /*
-    @Override
-    public List<Reservation> viewAllMyReservations(Long guestId) {
-        Customer guest = em.find(Customer.class, guestId);
-        List<Reservation> reservations = guest.getReservations();
 
-        return reservations;
-    }
-    */
-    
     @Override
     public List<Reservation> viewAllMyReservations(Long guestId) {
         Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.guest.guestId = :guestId");
@@ -105,6 +96,14 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
     }
 
 
+    @Override
+    public Guest createNewGuest(Guest newGuest) {
+        // Persist the new guest entity
+        em.persist(newGuest);
+        em.flush(); // Ensure the entity is synchronized with the database
+
+        return newGuest; // Return the persisted guest with the generated ID
+    } 
 
 
 }

@@ -23,4 +23,5 @@ public interface GuestSessionBeanRemote {
     
     public Customer guestLogin(String username, String password) throws InvalidLoginCredentialException;
     
+    public Guest createNewGuest(Guest newGuest);
 }
