@@ -65,7 +65,7 @@ public class Reservation implements Serializable {
     
     // relationships
     @ManyToOne(optional = false, cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = true)
     private Guest guest;
     
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
