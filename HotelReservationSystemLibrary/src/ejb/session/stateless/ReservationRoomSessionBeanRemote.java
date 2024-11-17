@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
 import util.exception.ReservationNotFoundException;
+import util.exception.RoomAllocationException;
 import util.exception.RoomNotAvailableException;
 
 /**
@@ -23,4 +24,9 @@ public interface ReservationRoomSessionBeanRemote {
     
     public ReservationRoom reserveRoom(Long roomId, Reservation reservation, Date checkInDate, Date checkOutDate) throws RoomNotAvailableException, ReservationNotFoundException;
     
+    public void allocateRoom(Long reservationRoomId, Long roomTypeId) throws RoomAllocationException;
+    
+    public void allocateRoomsForToday();
+    
+    public void allocateRoomsForDate(Date date);
 }

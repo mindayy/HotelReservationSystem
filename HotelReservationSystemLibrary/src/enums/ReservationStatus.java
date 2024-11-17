@@ -10,6 +10,7 @@ package enums;
  */
 public enum ReservationStatus {
     RESERVED,
+    ALLOCATED,
     CHECKEDIN,
     CHECKEDOUT
 }

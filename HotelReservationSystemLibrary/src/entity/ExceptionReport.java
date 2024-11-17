@@ -4,9 +4,7 @@
  */
 package entity;
 
-import enums.RoomAllocationExceptionTypeEnum;
 import java.io.Serializable;
-import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -23,7 +21,7 @@ import javax.persistence.OneToOne;
  * @author kaixin
  */
 @Entity
-public class RoomAllocationException implements Serializable {
+public class ExceptionReport implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -31,24 +29,21 @@ public class RoomAllocationException implements Serializable {
     private Long exceptionId;
     
     @Column(nullable = false)
-    private String message;  // RoomAllocationException message
+    private String errorMessage;  // ExceptionReport message
 
     @OneToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private ReservationRoom reservationRoom;  // Relationship with ReserveRoom entity
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private RoomAllocationExceptionTypeEnum exceptionType;
 
-    public RoomAllocationException() {
+    public ExceptionReport() {
     }
 
-    public RoomAllocationException(String message, ReservationRoom reservationRoom, RoomAllocationExceptionTypeEnum exceptionType) {
-        this.message = message;
+    public ExceptionReport(String errorMessage, ReservationRoom reservationRoom) {
+        this.errorMessage = errorMessage;
         this.reservationRoom = reservationRoom;
-        this.exceptionType = exceptionType;
     }
+
   
     public Long getExceptionId() {
         return exceptionId;
@@ -59,13 +54,13 @@ public class RoomAllocationException implements Serializable {
     }
     
 
-    public String getMessage() {
-        return message;
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setErrorMessage(String message) {
+        this.errorMessage = message;
     }
 
 
@@ -79,14 +74,6 @@ public class RoomAllocationException implements Serializable {
     }
 
 
-    public RoomAllocationExceptionTypeEnum getExceptionType() {
-        return exceptionType;
-    }
-
-
-    public void setExceptionType(RoomAllocationExceptionTypeEnum exceptionType) {
-        this.exceptionType = exceptionType;
-    }
 
     @Override
     public int hashCode() {
@@ -98,10 +85,10 @@ public class RoomAllocationException implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the exceptionId fields are not set
-        if (!(object instanceof RoomAllocationException)) {
+        if (!(object instanceof ExceptionReport)) {
             return false;
         }
-        RoomAllocationException other = (RoomAllocationException) object;
+        ExceptionReport other = (ExceptionReport) object;
         if ((this.exceptionId == null && other.exceptionId != null) || (this.exceptionId != null && !this.exceptionId.equals(other.exceptionId))) {
             return false;
         }

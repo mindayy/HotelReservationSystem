@@ -4,7 +4,6 @@
  */
 package horsmanagementclient;
 
-import ejb.session.stateless.RoomAllocationExceptionSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
@@ -26,6 +25,8 @@ import java.util.logging.Logger;
 import util.exception.InvalidAccessRightException;
 import util.exception.RoomRateNotFoundException;
 import util.exception.RoomTypeNotFoundException;
+import ejb.session.stateless.ExceptionReportSessionBeanRemote;
+import ejb.session.stateless.ReservationRoomSessionBeanRemote;
 
 /**
  *
@@ -36,19 +37,22 @@ public class HotelOperationModule {
     private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
     private RoomSessionBeanRemote roomSessionBeanRemote;
     private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
-    private RoomAllocationExceptionSessionBeanRemote roomAllocationExceptionSessionBeanRemote;
+    private ExceptionReportSessionBeanRemote exceptionReportSessionBeanRemote;
+    private ReservationRoomSessionBeanRemote reservationRoomSessionBeanRemote;
+
     
     private Employee currentEmployee;
 
     public HotelOperationModule() {
     }
 
-    public HotelOperationModule(RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, RoomAllocationExceptionSessionBeanRemote roomAllocationExceptionSessionBeanRemote, Employee currentEmployee) {
+    public HotelOperationModule(RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, ExceptionReportSessionBeanRemote exceptionReportSessionBeanRemote, ReservationRoomSessionBeanRemote reservationRoomSessionBeanRemote,  Employee currentEmployee) {
         this();
         this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
         this.roomSessionBeanRemote = roomSessionBeanRemote;
         this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
-        this.roomAllocationExceptionSessionBeanRemote = roomAllocationExceptionSessionBeanRemote;
+        this.exceptionReportSessionBeanRemote = exceptionReportSessionBeanRemote;
+        this.reservationRoomSessionBeanRemote = reservationRoomSessionBeanRemote;
         this.currentEmployee = currentEmployee;
     }
     
@@ -79,11 +83,12 @@ public class HotelOperationModule {
             System.out.println("6: Delete Room");
             System.out.println("7: View All Rooms");
             System.out.println("8: View Room Allocation Exception Report");
+            System.out.println("9: Allocate Rooms to Current Day Reservations"); 
             System.out.println("-----------------------");
-            System.out.println("9: Back\n");
+            System.out.println("10: Back\n");
             response = 0;
 
-            while (response < 1 || response > 9) {
+            while (response < 1 || response > 10) {
                 System.out.print("> ");
                 response = scanner.nextInt();
 
@@ -104,6 +109,8 @@ public class HotelOperationModule {
                 } else if (response == 8) {
                     doViewAllRoomAllocationExceptionReport();
                 } else if (response == 9) {
+                    doAllocateRoomsForReservations();
+                } else if (response == 10) {
                     break;
                 } else {
                     System.out.println("Invalid option, please try again!\n");
@@ -772,19 +779,34 @@ public class HotelOperationModule {
 
         try {
             // Call the session bean to generate the exception report
-            List<String> exceptionReport = roomAllocationExceptionSessionBeanRemote.generateRoomAllocationExceptionReport();
+            List<String> exceptionReport = exceptionReportSessionBeanRemote.generateRoomAllocationExceptionReport();
 
-            // Check if there are any exceptions to display
-            if (exceptionReport.isEmpty()) {
+            if (exceptionReport == null || exceptionReport.isEmpty()) {
                 System.out.println("There are no room allocation exceptions at this time.\n");
             } else {
-                // Iterate over the report and display each entry
+                System.out.println("Room Allocation Exception Report:\n");
+                int index = 1;
                 for (String reportEntry : exceptionReport) {
-                    System.out.println(reportEntry);  // Print each report entry
+                    System.out.println(index + ". " + reportEntry); // Print each report entry with a number
+                    index++;
                 }
             }
         } catch (Exception ex) {
             System.out.println("An error occurred while retrieving the room allocation exception report: " + ex.getMessage() + "\n");
+        }
+    }   
+    
+    private void doAllocateRoomsForReservations() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("*** Hotel Reservation System :: Hotel Operation :: Allocate Rooms for Current Day Reservations ***\n");
+
+        // You may pass today's date or a specific date as per your business logic
+        Date currentDate = new Date();  // Example: current date allocation
+        try {
+            reservationRoomSessionBeanRemote.allocateRoomsForDate(currentDate);  // Calling the session bean method
+            System.out.println("Rooms allocated for the current day's reservations successfully.\n");
+        } catch (Exception e) {
+            System.out.println("An error occurred while allocating rooms: " + e.getMessage() + "\n");
         }
     }
 

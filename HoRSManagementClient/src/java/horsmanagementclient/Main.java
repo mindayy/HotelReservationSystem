@@ -7,11 +7,12 @@ package horsmanagementclient;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
 import ejb.session.stateless.ReservationSessionBeanRemote;
-import ejb.session.stateless.RoomAllocationExceptionSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import javax.ejb.EJB;
+import ejb.session.stateless.ExceptionReportSessionBeanRemote;
+import ejb.session.stateless.ReservationRoomSessionBeanRemote;
 
 /**
  *
@@ -32,12 +33,14 @@ public class Main {
     @EJB
     private static EmployeeSessionBeanRemote employeeSessionBeanRemote;
     @EJB
-    private static RoomAllocationExceptionSessionBeanRemote roomAllocationExceptionSessionBeanRemote;
+    private static ExceptionReportSessionBeanRemote roomAllocationExceptionSessionBeanRemote;
+    @EJB
+    private static ReservationRoomSessionBeanRemote reservationRoomSessionBeanRemote;
     
     public static void main(String[] args) {
         // TODO code application logic here
         MainApp mainApp = new MainApp(roomTypeSessionBeanRemote, roomSessionBeanRemote, roomRateSessionBeanRemote, 
-                   reservationSessionBeanRemote, employeeSessionBeanRemote, partnerSessionBeanRemote, roomAllocationExceptionSessionBeanRemote);//insert session beans
+                   reservationSessionBeanRemote, employeeSessionBeanRemote, partnerSessionBeanRemote, roomAllocationExceptionSessionBeanRemote,reservationRoomSessionBeanRemote);//insert session beans
         mainApp.runApp();
     }
     

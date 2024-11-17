@@ -8,6 +8,7 @@ import entity.Customer;
 import entity.Reservation;
 import entity.ReservationRoom;
 import entity.Room;
+import entity.ExceptionReport;
 import entity.RoomRate;
 import entity.RoomType;
 import enums.ReservationStatus;
@@ -16,6 +17,7 @@ import static enums.ReservationStatus.CHECKEDOUT;
 import enums.RoomStatusEnum;
 import static java.lang.Boolean.FALSE;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -27,7 +29,7 @@ import javax.persistence.TypedQuery;
 import util.exception.GuestNotFoundException;
 import util.exception.ReservationNotFoundException;
 import util.exception.RoomNotAvailableException;
-import util.exception.RoomNotFoundException;
+import util.exception.RoomAllocationException;
 
 /**
  *
@@ -54,7 +56,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
 
         // Check for room allocation exceptions 
         /*if (... conditions for exception ...) {
-            throw new RoomAllocationException();
+            throw new ExceptionReport();
         }*/
 
         // If no exception, update reservation status and potentially other details:
@@ -182,5 +184,21 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             throw new IllegalStateException("No rate defined for room type " + roomTypeId + " on the selected dates.");
         }
     }
+
+    
+
+    @Override
+    public Long createReservation(Reservation reservation, List<ReservationRoom> reservationRooms) {
+        em.persist(reservation);
+
+        for (ReservationRoom reservationRoom : reservationRooms) {
+            reservationRoom.setReservation(reservation);
+            em.persist(reservationRoom);
+        }
+
+        return reservation.getReservationId();
+    }
+
+    
 
 }

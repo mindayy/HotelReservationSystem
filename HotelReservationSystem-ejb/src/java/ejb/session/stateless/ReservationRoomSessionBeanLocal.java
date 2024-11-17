@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.ReservationNotFoundException;
+import util.exception.RoomAllocationException;
 import util.exception.RoomNotAvailableException;
 
 /**
@@ -24,4 +25,9 @@ public interface ReservationRoomSessionBeanLocal {
     
     public ReservationRoom reserveRoom(Long roomId, Reservation reservation, Date checkInDate, Date checkOutDate) throws RoomNotAvailableException, ReservationNotFoundException;
     
+    public void allocateRoom(Long reservationRoomId, Long roomTypeId) throws RoomAllocationException;
+    
+    public void allocateRoomsForToday();
+    
+    public void allocateRoomsForDate(Date date);
 }

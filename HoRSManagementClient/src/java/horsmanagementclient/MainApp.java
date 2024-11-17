@@ -7,7 +7,6 @@ package horsmanagementclient;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
 import ejb.session.stateless.ReservationSessionBeanRemote;
-import ejb.session.stateless.RoomAllocationExceptionSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
@@ -15,6 +14,8 @@ import entity.Employee;
 import java.util.Scanner;
 import util.exception.InvalidAccessRightException;
 import util.exception.InvalidLoginCredentialException;
+import ejb.session.stateless.ExceptionReportSessionBeanRemote;
+import ejb.session.stateless.ReservationRoomSessionBeanRemote;
 
 /**
  *
@@ -26,9 +27,10 @@ class MainApp {
     private RoomSessionBeanRemote roomSessionBeanRemote;
     private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
     private ReservationSessionBeanRemote reservationSessionBeanRemote;
+    private ReservationRoomSessionBeanRemote reservationRoomSessionBeanRemote;
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
     private PartnerSessionBeanRemote partnerSessionBeanRemote;
-    private RoomAllocationExceptionSessionBeanRemote roomAllocationExceptionSessionBeanRemote;
+    private ExceptionReportSessionBeanRemote roomAllocationExceptionSessionBeanRemote;
 
     
     private SystemAdministrationModule systemAdministrationModule;
@@ -39,13 +41,15 @@ class MainApp {
 
     MainApp(RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, 
             ReservationSessionBeanRemote reservationSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote,
-            RoomAllocationExceptionSessionBeanRemote roomAllocationExceptionSessionBeanRemote) {
+            ExceptionReportSessionBeanRemote roomAllocationExceptionSessionBeanRemote,
+            ReservationRoomSessionBeanRemote reservationRoomSessionBeanRemote) {
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.reservationSessionBeanRemote = reservationSessionBeanRemote;
         this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
         this.roomSessionBeanRemote = roomSessionBeanRemote;
         this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
         this.partnerSessionBeanRemote = partnerSessionBeanRemote;
+        this.reservationRoomSessionBeanRemote = reservationRoomSessionBeanRemote;
         this.roomAllocationExceptionSessionBeanRemote = roomAllocationExceptionSessionBeanRemote;
     }
 
@@ -73,7 +77,7 @@ class MainApp {
                         System.out.println("Login successful!\n");
                         
                         systemAdministrationModule = new SystemAdministrationModule(employeeSessionBeanRemote, partnerSessionBeanRemote, currentEmployee);
-                        hotelOperationModule = new HotelOperationModule(roomTypeSessionBeanRemote, roomSessionBeanRemote, roomRateSessionBeanRemote, roomAllocationExceptionSessionBeanRemote, currentEmployee);
+                        hotelOperationModule = new HotelOperationModule(roomTypeSessionBeanRemote, roomSessionBeanRemote, roomRateSessionBeanRemote, roomAllocationExceptionSessionBeanRemote,reservationRoomSessionBeanRemote, currentEmployee);
                         frontOfficeModule = new FrontOfficeModule(reservationSessionBeanRemote, currentEmployee);
                         menuMain();
                     }
@@ -187,4 +191,6 @@ class MainApp {
             }
         }
     }  
+    
+    
 }

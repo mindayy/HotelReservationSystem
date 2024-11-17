@@ -5,6 +5,7 @@
 package ejb.session.stateless;
 
 import entity.Reservation;
+import entity.ReservationRoom;
 import entity.RoomType;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -32,4 +33,7 @@ public interface ReservationSessionBeanRemote {
     public List<Reservation> getAllReservationsForCustomer(Long customerId);
     
     public Reservation getReservationDetails(Long reservationId) throws ReservationNotFoundException;
+    
+    public Long createReservation(Reservation reservation, List<ReservationRoom> reservationRooms);
+    
 }
