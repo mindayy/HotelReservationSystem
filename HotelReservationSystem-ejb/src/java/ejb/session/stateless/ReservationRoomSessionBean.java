@@ -33,7 +33,7 @@ public class ReservationRoomSessionBean implements ReservationRoomSessionBeanRem
     private EntityManager em;
     
     @EJB
-    private ExceptionReportSessionBean exceptionReportSessionBean;
+    private ExceptionReportSessionBeanLocal exceptionReportSessionBean;
 
     @Override
     public List<Room> searchAvailableRooms(Date checkInDate, Date checkOutDate, Long roomTypeId) {
