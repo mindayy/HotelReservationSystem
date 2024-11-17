@@ -95,9 +95,12 @@ class MainApp {
                 {
                     doRegistration();
                 }
-                else if (response ==3)
+                else if (response == 3)
                 {
                     doSearchHotelRoom();
+                } else if (response == 4)
+                {
+                    break;
                 } else {
                     System.out.println("Invalid option, please try again!\n");                
                 }

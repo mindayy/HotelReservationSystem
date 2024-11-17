@@ -79,15 +79,20 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     @Override
     public BigDecimal reservationAmt(Long roomTypeId, Date checkInDate, Date checkOutDate) {
         BigDecimal totalAmount = BigDecimal.ZERO;
-        // Retrieve room rate based on the room type and date
-        BigDecimal roomRatePerNight = getApplicableRoomRate(roomTypeId, checkInDate, checkOutDate);
 
-        // Calculate the number of nights
-        long numNights = (checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(checkInDate);
 
-        // Calculate total amount for this room
-        totalAmount = totalAmount.add(roomRatePerNight.multiply(new BigDecimal(numNights)));
+        while (calendar.getTime().before(checkOutDate)) {
+            Date currentDate = new Date(calendar.getTime().getTime()); 
+            BigDecimal roomRatePerNight = getApplicableRoomRate(roomTypeId, currentDate, currentDate);
+
+            totalAmount = totalAmount.add(roomRatePerNight);
+
+            calendar.add(Calendar.DATE, 1);
+        }
         return totalAmount;
+
     }
     
     @Override

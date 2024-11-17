@@ -117,7 +117,7 @@ public class HotelOperationModule {
                 }
             }
 
-            if (response == 9) {
+            if (response == 10) {
                 break;
             }
         }
